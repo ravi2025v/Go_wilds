@@ -1,0 +1,12 @@
+# Ignore Backup files
+*_backup.php
+*_backup_v2.php
+*_backup_v3.php
+
+# Ignore temporary files
+/tmp/
+.DS_Store
+Thumbs.db
+
+# Ignore Environment/Config (if you have secret DB passwords)
+# config.php
