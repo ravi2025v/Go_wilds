@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_booking'])) {
             $new_total_price = ($hotel_price * $totalPeople) + 50 + (20 * ($totalPeople + $infants));
 
             $update_sql = "UPDATE tour_bookings SET 
-                           booking_date = '$new_date', 
+                           tour_date = '$new_date', 
                            adults = $adults, 
                            children = $children, 
                            infants = $infants, 
@@ -111,7 +111,7 @@ $bookings_res = $conn->query($query);
                                                 <p class="text-muted small mb-0"><i
                                                         class="fas fa-calendar-check me-1 text-success"></i> <strong>Travel
                                                         Date:
-                                                        <?php echo date('d M Y', strtotime($booking['booking_date'])); ?></strong>
+                                                        <?php echo date('d M Y', strtotime($booking['tour_date'])); ?></strong>
                                                 </p>
                                                 <p class="text-muted small mb-0"><i class="fas fa-history me-1"></i> Booked On:
                                                     <?php echo date('d M Y', strtotime($booking['created_at'])); ?>
@@ -371,7 +371,7 @@ $bookings_res = $conn->query($query);
     function openEditModal(booking) {
         currentBooking = booking;
         document.getElementById('edit_id').value = booking.id;
-        document.getElementById('edit_date').value = booking.booking_date;
+        document.getElementById('edit_date').value = booking.tour_date;
         document.getElementById('edit_adults').value = booking.adults;
         document.getElementById('edit_children').value = booking.children;
         document.getElementById('edit_infants').value = booking.infants;

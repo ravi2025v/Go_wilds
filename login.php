@@ -267,6 +267,14 @@ $redirect_url = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) :
             <p class="auth-subtitle">Enter your mobile number to continue</p>
             
             <form id="form-mobile">
+                <div class="form-group">
+                    <i class="far fa-user"></i>
+                    <input type="text" name="name" id="name-input" class="form-control" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <i class="far fa-envelope"></i>
+                    <input type="email" name="email" id="email-input" class="form-control" placeholder="Email Address" required>
+                </div>
                 <div class="form-group phone-input-group">
                     <input type="text" class="form-control country-code" value="+91" readonly>
                     <div style="flex: 1; position: relative;">
@@ -406,6 +414,8 @@ $redirect_url = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) :
         // Phone Input Handler
         $('#form-mobile').on('submit', function(e) {
             e.preventDefault();
+            const name = $('#name-input').val();
+            const email = $('#email-input').val();
             const phone = $('#phone-input').val();
             const $btn = $(this).find('button');
             $btn.prop('disabled', true).text('SENDING...');
@@ -413,7 +423,7 @@ $redirect_url = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) :
             $.ajax({
                 url: 'auth_handler.php?action=send_otp',
                 type: 'POST',
-                data: { phone: phone },
+                data: { phone: phone, name: name, email: email },
                 success: function(resp) {
                     if (resp.status === 'success') {
                         $('#otp-subtitle').text('Sent to +91 ' + phone);

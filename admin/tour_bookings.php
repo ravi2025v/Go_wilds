@@ -1,13 +1,25 @@
 <?php
-session_start();
 require_once 'includes/db.php';
+
+// Handle Status Update
+if(isset($_GET['action']) && isset($_GET['id'])) {
+    $id = intval($_GET['id']);
+    $status = $conn->real_escape_string($_GET['action']);
+    
+    // Validate status
+    if(in_array($status, ['pending', 'confirmed', 'cancelled'])) {
+        $conn->query("UPDATE tour_bookings SET status = '$status' WHERE id = $id");
+        header("Location: tour_bookings.php?msg=Status updated to $status");
+        exit();
+    }
+}
+
 require_once 'includes/header.php';
 
 // Handle Search
 $search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 $where_clause = "";
 if(!empty($search)) {
-    // Search by City/Destination or Tour Name
     $where_clause = " WHERE t.title LIKE '%$search%' OR t.destination LIKE '%$search%' OR b.customer_name LIKE '%$search%'";
 }
 
@@ -31,6 +43,13 @@ $result = $conn->query($sql);
     </form>
 </div>
 
+<?php if(isset($_GET['msg'])): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?php echo htmlspecialchars($_GET['msg']); ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<?php endif; ?>
+
 <div class="card border-0 shadow-sm p-4">
     <div class="table-responsive">
         <table class="table table-hover align-middle">
@@ -41,7 +60,7 @@ $result = $conn->query($sql);
                     <th>Tour & Detail</th>
                     <th>Passengers</th>
                     <th>Dates</th>
-                    <th>Status</th>
+                    <th>Status & Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,9 +97,21 @@ $result = $conn->query($sql);
                             </div>
                         </td>
                         <td>
-                            <span class="badge rounded-pill <?php echo $row['status'] == 'confirmed' ? 'bg-success' : 'bg-warning text-dark'; ?>">
-                                <?php echo ucfirst($row['status']); ?>
-                            </span>
+                            <div class="dropdown">
+                                <?php
+                                $status_class = 'bg-warning text-dark';
+                                if($row['status'] == 'confirmed') $status_class = 'bg-success';
+                                if($row['status'] == 'cancelled') $status_class = 'bg-danger';
+                                ?>
+                                <button class="badge rounded-pill <?php echo $status_class; ?> dropdown-toggle border-0" type="button" data-bs-toggle="dropdown">
+                                    <?php echo ucfirst($row['status']); ?>
+                                </button>
+                                <ul class="dropdown-menu shadow border-0">
+                                    <li><a class="dropdown-item small" href="?id=<?php echo $row['id']; ?>&action=pending">Mark as Pending</a></li>
+                                    <li><a class="dropdown-item small text-success" href="?id=<?php echo $row['id']; ?>&action=confirmed">Confirm Booking</a></li>
+                                    <li><a class="dropdown-item small text-danger" href="?id=<?php echo $row['id']; ?>&action=cancelled">Cancel Booking</a></li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                     <?php endwhile; ?>

@@ -215,6 +215,36 @@
     <script src="assets/vendor/wow.min.js"></script>
     <!--====== Main js ======-->
     <script src="assets/js/theme.js"></script>
-</body>
+    <script>
+    // Auto-hide alerts after 3 seconds and clean URL
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert');
+        if (alerts.length > 0) {
+            // Remove msg parameter from URL without refreshing
+            const url = new URL(window.location);
+            if (url.searchParams.has('msg')) {
+                url.searchParams.delete('msg');
+                window.history.replaceState({}, document.title, url);
+            }
 
+            // Auto hide after 3 seconds
+            setTimeout(function() {
+                alerts.forEach(function(alert) {
+                    // Try bootstrap 5 method first
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        if (bsAlert) bsAlert.close();
+                    } else {
+                        // Fallback to jQuery or manual hide
+                        alert.style.transition = 'opacity 0.5s ease';
+                        alert.style.opacity = '0';
+                        setTimeout(() => alert.remove(), 500);
+                    }
+                });
+            }, 3000);
+        }
+    });
+    </script>
+</body>
 </html>
+

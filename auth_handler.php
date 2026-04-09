@@ -130,8 +130,13 @@ if ($action === 'send_otp') {
         $otp = rand(1000, 9999);
         $expiry = date('Y-m-d H:i:s', strtotime('+5 minutes'));
 
-        // Store OTP and phone in session temporarily
+        $name = $conn->real_escape_string($_POST['name'] ?? '');
+        $email = $conn->real_escape_string($_POST['email'] ?? '');
+
+        // Store OTP, phone, name and email in session temporarily
         $_SESSION['temp_phone'] = $phone;
+        $_SESSION['temp_name'] = $name;
+        $_SESSION['temp_email'] = $email;
         $_SESSION['temp_otp'] = $otp;
         $_SESSION['temp_otp_expiry'] = $expiry;
 
@@ -194,7 +199,28 @@ if ($action === 'verify_otp') {
                 $_SESSION['phone_verified'] = 1;
                 $response = ['status' => 'success', 'newUser' => false];
             } else {
-                $response = ['status' => 'success', 'newUser' => true];
+                // Auto-signup if we have name and email in session
+                $temp_name = $_SESSION['temp_name'] ?? '';
+                $temp_email = $_SESSION['temp_email'] ?? '';
+                
+                if (!empty($temp_name)) {
+                    $password = password_hash(uniqid(), PASSWORD_DEFAULT);
+                    $sql = "INSERT INTO users (name, email, phone, password, role, phone_verified, created_at) 
+                            VALUES ('$temp_name', '$temp_email', '$phone', '$password', 'user', 1, NOW())";
+                    
+                    if ($conn->query($sql)) {
+                        $_SESSION['user_id'] = $conn->insert_id;
+                        $_SESSION['user_name'] = $temp_name;
+                        $_SESSION['user_email'] = $temp_email;
+                        $_SESSION['user_phone'] = $phone;
+                        $_SESSION['phone_verified'] = 1;
+                        $response = ['status' => 'success', 'newUser' => false];
+                    } else {
+                        $response['message'] = 'Error creating account: ' . $conn->error;
+                    }
+                } else {
+                    $response = ['status' => 'success', 'newUser' => true];
+                }
             }
         }
     }

@@ -16,8 +16,12 @@ if (isset($_GET['action'])) {
     exit();
 }
 
-// Fetch Reviews
-$reviews = $conn->query("SELECT r.*, t.title as tour_title FROM reviews r JOIN tours t ON r.tour_id = t.id ORDER BY r.created_at DESC");
+// Fetch Reviews with user names
+$reviews = $conn->query("SELECT r.*, t.title as tour_title, u.name as user_name 
+                        FROM reviews r 
+                        JOIN tours t ON r.tour_id = t.id 
+                        JOIN users u ON r.user_id = u.id 
+                        ORDER BY r.created_at DESC");
 ?>
 
 <div class="container-fluid">

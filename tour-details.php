@@ -1,9 +1,21 @@
 <?php
 include 'includes/header.php';
 require_once 'admin/includes/db.php';
+?>
+<?php
 
 // Get tour ID from URL
 $tour_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+// Check if in wishlist
+$is_in_wishlist = false;
+if (isset($_SESSION['user_id']) && $tour_id > 0) {
+    $uid = $_SESSION['user_id'];
+    $check_wish = $conn->query("SELECT id FROM wishlist WHERE user_id = $uid AND tour_id = $tour_id");
+    if ($check_wish && $check_wish->num_rows > 0) {
+        $is_in_wishlist = true;
+    }
+}
 
 if ($tour_id <= 0) {
     echo "<script>window.location.href='tour.php';</script>";
@@ -20,6 +32,7 @@ if (!$tour_result || $tour_result->num_rows == 0) {
 }
 
 $tour = $tour_result->fetch_assoc();
+$is_logged_in = isset($_SESSION['user_id']);
 
 // Fetch itinerary
 $itinerary_query = "SELECT * FROM itineraries WHERE tour_id = $tour_id ORDER BY day_number ASC";
@@ -31,8 +44,8 @@ if ($itinerary_result && $itinerary_result->num_rows > 0) {
     }
 }
 
-// Fetch reviews
-$reviews_query = "SELECT * FROM reviews WHERE tour_id = $tour_id AND status = 'approved' ORDER BY created_at DESC";
+// Fetch reviews with user details
+$reviews_query = "SELECT r.*, u.name as user_name FROM reviews r JOIN users u ON r.user_id = u.id WHERE r.tour_id = $tour_id AND r.status = 'approved' ORDER BY r.created_at DESC";
 $reviews_result = $conn->query($reviews_query);
 $reviews = [];
 $total_rating = 0;
@@ -116,7 +129,7 @@ $related_result = $conn->query($related_query);
                                 <div class="share-nav">
                                     <a href="#">Share<i class="far fa-share"></i></a>
                                     <a href="#reviews">Reviews<i class="far fa-comment"></i></a>
-                                    <a href="wishlist_action.php?id=<?php echo $tour_id; ?>">Wishlist<i class="far fa-heart"></i></a>
+                                    <a href="javascript:void(0);" id="wishlist-btn" class="wishlist-btn <?php echo $is_in_wishlist ? 'active' : ''; ?>" data-id="<?php echo $tour_id; ?>">Wishlist<i class="fa<?php echo $is_in_wishlist ? 's' : 'r'; ?> fa-heart"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -310,17 +323,29 @@ $related_result = $conn->query($related_query);
                                 </div>
                             </div>
                             
-                            <!--===  Comments Form  ===-->
                             <div class="comments-respond mb-30 wow fadeInUp">
                                 <h3 class="comments-heading" style="margin-bottom: 15px;">Need additional Information?</h3>
-                                <form action="process_inquiry.php" method="POST" class="comment-form">
+                                <form id="review-form" class="comment-form">
                                     <input type="hidden" name="tour_id" value="<?php echo $tour_id; ?>">
                                     <div class="row">
+                                        <!-- Star Rating -->
+                                        <div class="col-lg-12 mb-3">
+                                            <label class="form-label d-block">Your Rating</label>
+                                            <div class="star-rating fs-3 text-warning" style="cursor: pointer;">
+                                                <i class="far fa-star rating-star" data-rating="1"></i>
+                                                <i class="far fa-star rating-star" data-rating="2"></i>
+                                                <i class="far fa-star rating-star" data-rating="3"></i>
+                                                <i class="far fa-star rating-star" data-rating="4"></i>
+                                                <i class="far fa-star rating-star" data-rating="5"></i>
+                                                <input type="hidden" name="rating" id="rating-input" value="0" required>
+                                            </div>
+                                        </div>
+
 									  <!-- Name -->
 									  <div class="col-lg-12 mb-3">
 										<div class="form-group">
 										  <label for="name" class="form-label">Full Name</label>
-										  <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+										  <input type="text" class="form-control" id="name" name="name" value="<?php echo $_SESSION['user_name'] ?? ''; ?>" placeholder="Enter your name" readonly>
 										</div>
 									  </div>
 
@@ -328,7 +353,7 @@ $related_result = $conn->query($related_query);
 									  <div class="col-lg-6 mb-3">
 										<div class="form-group">
 										  <label for="email" class="form-label">Email Address</label>
-										  <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+										  <input type="email" class="form-control" id="email" name="email" value="<?php echo $_SESSION['user_email'] ?? ''; ?>" placeholder="Enter your email" readonly>
 										</div>
 									  </div>
 
@@ -336,26 +361,24 @@ $related_result = $conn->query($related_query);
 									  <div class="col-lg-6 mb-3">
 										  <div class="form-group">
 											<label for="phone" class="form-label">Enter Number</label>
-											<input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number" required>
-										</div>
-									  </div>
-									  <!-- Message -->
-									  <div class="col-lg-12 mb-3">
-										<div class="form-group">
-										  <label for="message" class="form-label">Comments</label>
-										  <textarea name="message" id="message" class="form-control" rows="4" placeholder="Write your comments" required></textarea>
+											<input type="text" class="form-control" id="phone" name="phone" value="<?php echo $_SESSION['user_phone'] ?? ''; ?>" placeholder="Enter phone number" readonly>
 										</div>
 									  </div>
 
-									  <!-- Submit -->
-									  <div class="col-lg-12">
+									  <!-- Comments -->
+									  <div class="col-lg-12 mb-3">
 										<div class="form-group">
-										  <button type="submit" class="btn btn-primary">
-											Send <i class="fas fa-angle-double-right"></i>
-										  </button>
+										  <label for="comments" class="form-label">Comments</label>
+										  <textarea name="comment" id="comments" class="form-control" rows="4" placeholder="Write your comments" required></textarea>
 										</div>
 									  </div>
-									</div>
+
+									  <!-- Submit Button -->
+									  <div class="col-lg-12">
+										<button type="submit" class="main-btn primary-btn" id="submit-review-btn">Send <i class="fas fa-paper-plane"></i></button>
+                                        <div id="review-msg" class="mt-2 text-center small"></div>
+									  </div>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -456,9 +479,13 @@ $related_result = $conn->query($related_query);
                                         </div>
                                         
                                         <div class="booking-total mb-20">
-                                            <div class="total">
-                                                <label>Price per Adult</label>
-                                                <span class="price">₹<span id="base_price"><?php echo number_format($tour['price'], 2); ?></span></span>
+                                            <div class="total d-flex justify-content-between mb-2">
+                                                <label class="text-muted">Price per Adult</label>
+                                                <span class="price text-dark">₹<span id="display_per_adult_price"><?php echo number_format($tour['price'], 2); ?></span></span>
+                                            </div>
+                                            <div class="total d-flex justify-content-between pt-2 border-top">
+                                                <label class="fw-bold">Total Amount</label>
+                                                <span class="price fw-bold text-success fs-5">₹<span id="total_amount">0.00</span></span>
                                             </div>
                                         </div>
                                         <div class="submit-button">
@@ -504,10 +531,48 @@ $related_result = $conn->query($related_query);
         </section><!--====== End Place Details Section ======-->
 		
 
-<?php include 'includes/footer.php'; ?>
+
+
+
+<style>
+    .wishlist-btn.active {
+        color: #ff4d4d !important;
+        border-color: #ff4d4d !important;
+    }
+    .wishlist-btn.active i {
+        color: #ff4d4d !important;
+    }
+    .wishlist-btn {
+        transition: all 0.3s ease;
+    }
+</style>
 
 <script>
-    document.getElementById("toggleAll").addEventListener("change", function() {
+    $(document).ready(function() {
+        $('#wishlist-btn').on('click', function() {
+            const btn = $(this);
+            const tourId = btn.data('id');
+            
+            $.ajax({
+                url: 'wishlist_action.php?id=' + tourId,
+                type: 'GET',
+                success: function(resp) {
+                    if (resp.status === 'added') {
+                        btn.addClass('active');
+                        btn.find('i').removeClass('far').addClass('fas');
+                    } else if (resp.status === 'removed') {
+                        btn.removeClass('active');
+                        btn.find('i').removeClass('fas').addClass('far');
+                    } else if (resp.status === 'error') {
+                        window.location.href = 'login.php?msg=' + encodeURIComponent(resp.message);
+                    }
+                }
+            });
+        });
+    });
+
+    // Toggle logic for accordion...
+    document.getElementById("toggleAll")?.addEventListener("change", function() {
         let allCollapses = document.querySelectorAll(".accordion-collapse");
         if (this.checked) {
             allCollapses.forEach(collapse => {
@@ -522,5 +587,92 @@ $related_result = $conn->query($related_query);
         }
     });
 
-    // Price calculation logic could go here if needed dynamically
+    // Star Rating Logic
+    $('.rating-star').on('click', function() {
+        const rating = $(this).data('rating');
+        $('#rating-input').val(rating);
+        $('.rating-star').each(function(index) {
+            if (index < rating) {
+                $(this).removeClass('far').addClass('fas');
+            } else {
+                $(this).removeClass('fas').addClass('far');
+            }
+        });
+    });
+
+    // Review Form Submission
+    $('#review-form').on('submit', function(e) {
+        e.preventDefault();
+        const btn = $('#submit-review-btn');
+        const msg = $('#review-msg');
+        
+        if ($('#rating-input').val() == '0') {
+            msg.text('Please select a star rating.').css('color', 'red');
+            return;
+        }
+
+        btn.prop('disabled', true).text('SUBMITTING...');
+        
+        $.ajax({
+            url: 'review_submit.php',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(resp) {
+                if (resp.status === 'success') {
+                    msg.text(resp.message).css('color', 'green');
+                    $('#review-form')[0].reset();
+                    $('.rating-star').removeClass('fas').addClass('far');
+                } else {
+                    msg.text(resp.message).css('color', 'red');
+                    if (resp.message.includes('login')) {
+                        setTimeout(() => window.location.href = 'login.php', 2000);
+                    }
+                }
+                btn.prop('disabled', false).text('SUBMIT REVIEW');
+            }
+        });
+    });
+
+    // Price calculation logic...
+    function updatePrice() {
+        try {
+            const adultsElement = document.getElementById('adults_count');
+            const childElement = document.getElementById('child_count');
+            const infantsElement = document.getElementById('infants_count');
+            const hotelSelect = document.getElementById('hotel_type');
+
+            if (!adultsElement || !hotelSelect) return;
+
+            const adults = parseInt(adultsElement.value) || 0;
+            const children = parseInt(childElement ? childElement.value : 0) || 0;
+            
+            const hotelExtra = parseFloat(hotelSelect.options[hotelSelect.selectedIndex].getAttribute('data-price')) || 0;
+            
+            const basePrice = <?php echo floatval(str_replace(',', '', $tour['price'])); ?>;
+            const perAdultPrice = basePrice + hotelExtra;
+            
+            const perAdultPriceEl = document.getElementById('display_per_adult_price');
+            if (perAdultPriceEl) {
+                perAdultPriceEl.innerText = perAdultPrice.toLocaleString('en-IN', {minimumFractionDigits: 2});
+            }
+            
+            const total = perAdultPrice * (adults + children);
+            const totalAmountEl = document.getElementById('total_amount');
+            if (totalAmountEl) {
+                totalAmountEl.innerText = total.toLocaleString('en-IN', {minimumFractionDigits: 2});
+            }
+        } catch (e) {
+            console.error("Price update error:", e);
+        }
+    }
+
+    // Attach listeners with a small delay for nice-select initialization
+    setTimeout(() => {
+        ['adults_count', 'child_count', 'infants_count', 'hotel_type'].forEach(id => {
+            $(document).on('change', '#' + id, updatePrice);
+        });
+        updatePrice();
+    }, 500);
 </script>
+
+<?php include 'includes/footer.php'; ?>
