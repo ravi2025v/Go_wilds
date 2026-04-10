@@ -18,9 +18,9 @@
                 <!--=== Single Gallery Item ===-->
                 <div class="single-gallery-item">
                     <div class="gallery-img">
-                        <img src="assets/images/tour-4-550x590.jpg" alt="Gallery Image">
+                        <img src="assets/images/tour-5-550x590.jpg" alt="Gallery Image">
                         <div class="hover-overlay">
-                            <a href="assets/images/tour-4-550x590.jpg" class="icon-btn img-popup"><i
+                            <a href="assets/images/tour-5-550x590.jpg" class="icon-btn img-popup"><i
                                     class="far fa-plus"></i></a>
                         </div>
                     </div>
@@ -58,9 +58,9 @@
                 <!--=== Single Gallery Item ===-->
                 <div class="single-gallery-item">
                     <div class="gallery-img">
-                        <img src="assets/images/tour-10-550x590.jpg" alt="Gallery Image">
+                        <img src="assets/images/tour-4-550x590.jpg" alt="Gallery Image">
                         <div class="hover-overlay">
-                            <a href="assets/images/tour-10-550x590.jpg" class="icon-btn img-popup"><i
+                            <a href="assets/images/tour-4-550x590.jpg" class="icon-btn img-popup"><i
                                     class="far fa-plus"></i></a>
                         </div>
                     </div>

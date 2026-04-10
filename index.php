@@ -11,7 +11,7 @@ $dest_query = "SELECT destination, COUNT(*) as tour_count FROM tours WHERE statu
 $dest_result = $conn->query($dest_query);
 
 // Fetch Testimonials (Latest approved reviews)
-$testimonial_query = "SELECT r.*, t.title as tour_name FROM reviews r JOIN tours t ON r.tour_id = t.id WHERE r.status = 'approved' ORDER BY r.created_at DESC LIMIT 5";
+$testimonial_query = "SELECT r.*, t.title as tour_name, u.name as user_name FROM reviews r JOIN tours t ON r.tour_id = t.id JOIN users u ON r.user_id = u.id WHERE r.status = 'approved' ORDER BY r.created_at DESC LIMIT 5";
 $testimonial_result = $conn->query($testimonial_query);
 ?>
 
@@ -634,9 +634,9 @@ $testimonial_result = $conn->query($testimonial_query);
                                         </div>
                                     </div>
                                     <div class="testimonial-author">
-                                        <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($review['user_name']); ?>" alt="<?php echo htmlspecialchars($review['user_name']); ?>">
+                                        <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($review['user_name'] ?? 'Guest'); ?>" alt="<?php echo htmlspecialchars($review['user_name'] ?? 'Guest'); ?>" onerror="this.onerror=null; this.src='assets/images/user.jpg'">
                                         <div>
-                                            <h6><?php echo htmlspecialchars($review['user_name']); ?></h6>
+                                            <h6><?php echo htmlspecialchars($review['user_name'] ?? 'Guest'); ?></h6>
                                             <small><?php echo htmlspecialchars($review['tour_name']); ?></small>
                                         </div>
                                     </div>

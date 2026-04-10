@@ -1,6 +1,5 @@
 <?php
 include 'includes/header.php';
-require_once 'admin/includes/db.php';
 
 // Handle category filtering
 $category = isset($_GET['category']) ? $conn->real_escape_string($_GET['category']) : '';

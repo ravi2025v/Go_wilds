@@ -3,6 +3,7 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+require_once 'admin/includes/db.php';
 $is_logged_in = isset($_SESSION['user_id']);
 
 // Sync user phone if missing from session
@@ -191,16 +192,32 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
                                 <li class="menu-item has-children"><a href="about.php">About Us</a></li>
                                 <li class="menu-item has-children"><a href="tour.php">Tours</a>
                                     <ul class="sub-menu">
-                                        <li><a href="tour.php?category=International%20Destinations">International
-                                                Destinations</a></li>
-                                        <li><a href="tour.php?category=Domestic%20Destinations">Domestic
-                                                Destinations</a></li>
-                                        <li><a href="tour.php?category=Hot%20Destinations">Hot Destinations</a></li>
-                                        <li><a href="tour.php?category=Niche%20Experience%20Tours">Niche Experience
-                                                Tours</a></li>
-                                        <li><a href="tour.php?category=Pilgrimage">Pilgrimage</a></li>
-                                        <li><a href="tour.php?category=Wild%20Safari">Wild Safari</a></li>
-                                        <li><a href="tour.php?category=Trek">Trek</a></li>
+                                        <?php
+                                        // Master list of categories to match Admin Panel
+                                        $master_categories = [
+                                            "Domestic Destinations",
+                                            "International Destinations",
+                                            "Hot Destinations",
+                                            "Niche Experience Tours",
+                                            "Pilgrimage",
+                                            "Wild Safari",
+                                            "Trek",
+                                            "General"
+                                        ];
+
+                                        foreach ($master_categories as $cat) {
+                                            echo '<li><a href="tour.php?category='.urlencode($cat).'">'.htmlspecialchars($cat).'</a></li>';
+                                        }
+
+                                        // Also show any other unique categories that might exist in the DB
+                                        $nav_cat_query = "SELECT DISTINCT category FROM tours WHERE category NOT IN ('".implode("','", $master_categories)."') AND status = 'active' ORDER BY category";
+                                        $nav_cat_res = $conn->query($nav_cat_query);
+                                        if ($nav_cat_res && $nav_cat_res->num_rows > 0) {
+                                            while($nav_cat = $nav_cat_res->fetch_assoc()) {
+                                                echo '<li><a href="tour.php?category='.urlencode($nav_cat['category']).'">'.htmlspecialchars($nav_cat['category']).'</a></li>';
+                                            }
+                                        }
+                                        ?>
                                     </ul>
                                 </li>
                                 <li class="menu-item has-children"><a href="https://www.myeasytrip.in/">Flight

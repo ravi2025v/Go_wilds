@@ -33,8 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_booking'])) {
         $booking_data = $check->fetch_assoc();
         if ($booking_data['status'] === 'pending') {
             // Recalculate price
+            // Recalculate price: $hotel_price already includes base + upgrade from the select value
             $totalPeople = $adults + $children;
-            $new_total_price = ($hotel_price * $totalPeople) + 50 + (20 * ($totalPeople + $infants));
+            $new_total_price = ($hotel_price * $totalPeople);
 
             $update_sql = "UPDATE tour_bookings SET 
                            tour_date = '$new_date', 
@@ -380,20 +381,19 @@ $bookings_res = $conn->query($query);
         const hSelect = document.getElementById('edit_hotel_select');
         hSelect.innerHTML = '';
 
+        const basePrice = parseFloat(booking.p_budget) || 0;
         const options = [
-            { label: 'Budget hotels', price: booking.p_budget },
-            { label: '3 Star Hotel', price: booking.p_3star },
-            { label: '4 Star Hotel', price: booking.p_4star },
-            { label: '5 Star Hotel', price: booking.p_5star },
-            { label: 'Camps', price: booking.p_camps },
-            { label: 'Homestay', price: booking.p_homestay }
+            { label: 'Budget hotels', price: basePrice },
+            { label: '3 Star Hotel', price: basePrice + (parseFloat(booking.p_3star) || 0) },
+            { label: '4 Star Hotel', price: basePrice + (parseFloat(booking.p_4star) || 0) },
+            { label: '5 Star Hotel', price: basePrice + (parseFloat(booking.p_5star) || 0) },
+            { label: 'Camps', price: basePrice + (parseFloat(booking.p_camps) || 0) },
+            { label: 'Homestay', price: basePrice + (parseFloat(booking.p_homestay) || 0) }
         ];
 
         options.forEach(opt => {
-            if (opt.price && parseFloat(opt.price) > 0) {
-                const isSelected = (opt.label === booking.hotel_type) ? 'selected' : '';
-                hSelect.innerHTML += `<option value="${opt.label}|${opt.price}" ${isSelected}>${opt.label} (₹${parseFloat(opt.price).toLocaleString()})</option>`;
-            }
+            const isSelected = (opt.label === booking.hotel_type) ? 'selected' : '';
+            hSelect.innerHTML += `<option value="${opt.label}|${opt.price}" ${isSelected}>${opt.label} (₹${parseFloat(opt.price).toLocaleString()})</option>`;
         });
 
         updateEstimatedPrice();
@@ -411,7 +411,7 @@ $bookings_res = $conn->query($query);
         const hotelPrice = parseFloat(hotelVal.split('|')[1]) || 0;
 
         const totalPeople = adults + children;
-        const total = (hotelPrice * totalPeople) + 50 + (20 * (totalPeople + infants));
+        const total = (hotelPrice * totalPeople);
 
         document.getElementById('estimated_total').innerText = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
