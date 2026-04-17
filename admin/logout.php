@@ -1,4 +1,5 @@
 <?php
+session_name("GoWilds_Session");
 session_start();
 
 // Unset all session variables

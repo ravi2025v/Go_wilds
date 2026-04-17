@@ -32,10 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_booking'])) {
     if ($check && $check->num_rows > 0) {
         $booking_data = $check->fetch_assoc();
         if ($booking_data['status'] === 'pending') {
-            // Recalculate price
-            // Recalculate price: $hotel_price already includes base + upgrade from the select value
+            // Recalculate price: $hotel_price already includes base + upgrade
             $totalPeople = $adults + $children;
-            $new_total_price = ($hotel_price * $totalPeople);
+            // Include standard fees: ₹50 base + ₹20 per person (including infants)
+            $new_total_price = ($hotel_price * $totalPeople) + 50 + (20 * ($totalPeople + $infants));
 
             $update_sql = "UPDATE tour_bookings SET 
                            tour_date = '$new_date', 
@@ -147,8 +147,14 @@ $bookings_res = $conn->query($query);
                                                 <span
                                                     class="badge bg-info-subtle text-info border border-info-subtle"><?php echo htmlspecialchars($booking['hotel_type'] ?: 'Budget Package'); ?></span>
                                                 <span
-                                                    class="d-block small mt-1">₹<?php echo number_format($booking['hotel_price'], 2); ?>
-                                                    per pax</span>
+                                                    class="d-block small mt-1">₹<?php 
+                                                        $display_price = $booking['hotel_price'];
+                                                        // Fallback for older budget bookings where hotel_price was stored as 0
+                                                        if ($display_price <= 0 || ($booking['hotel_type'] == 'Budget' && $display_price < $booking['p_budget'])) {
+                                                            $display_price = $booking['p_budget'];
+                                                        }
+                                                        echo number_format($display_price, 2); 
+                                                    ?> per pax</span>
                                             </div>
                                             <div class="col-md-4">
                                                 <small class="text-muted d-block">Booking Reference</small>
@@ -338,10 +344,22 @@ $bookings_res = $conn->query($query);
                         </div>
                     </div>
 
-                    <div class="price-preview-box bg-primary p-3 rounded shadow-sm mb-3 text-white">
+                    <div class="price-preview-box bg-white border p-3 rounded shadow-sm mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted small">Hotels & Tour:</span>
+                            <span class="text-dark small">₹<span id="base_est_total">0.00</span></span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted small">Booking Fee:</span>
+                            <span class="text-dark small">₹50.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                            <span class="text-muted small">Service Fee (<span id="est_pax_label">1</span> pax):</span>
+                            <span class="text-dark small">₹<span id="est_service_fee">20.00</span></span>
+                        </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold">Estimated Total:</span>
-                            <h4 class="mb-0 text-white fw-bold">₹<span id="estimated_total">0.00</span></h4>
+                            <span class="fw-bold text-primary">Estimated Total:</span>
+                            <h4 class="mb-0 text-primary fw-bold">₹<span id="estimated_total">0.00</span></h4>
                         </div>
                     </div>
 
@@ -409,11 +427,21 @@ $bookings_res = $conn->query($query);
 
         const hotelVal = document.getElementById('edit_hotel_select').value;
         const hotelPrice = parseFloat(hotelVal.split('|')[1]) || 0;
-
         const totalPeople = adults + children;
-        const total = (hotelPrice * totalPeople);
+        const totalWithInfants = totalPeople + infants;
+        
+        const bookingFee = 50;
+        const serviceFee = 20 * totalWithInfants;
+        const baseTourTotal = hotelPrice * totalPeople;
 
-        document.getElementById('estimated_total').innerText = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        // Update UI
+        document.getElementById('base_est_total').innerText = baseTourTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+        document.getElementById('est_pax_label').innerText = totalWithInfants;
+        document.getElementById('est_service_fee').innerText = serviceFee.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+
+        const total = baseTourTotal + bookingFee + serviceFee;
+
+        document.getElementById('estimated_total').innerText = total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 </script>
 

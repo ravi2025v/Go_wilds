@@ -200,7 +200,7 @@ $redirect_url = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) :
 <div class="auth-wrapper">
     <div class="auth-card">
         <div class="auth-logo text-center mb-4">
-            <a href="index.php"><img src="assets/images/logo-black.png" alt="Logo" style="max-width: 150px;"></a>
+            <a href="index.php"><img src="assets/images/logo.png" alt="MyEasyTrip Logo" style="max-width: 150px;"></a>
         </div>
 
         <div id="phone-section" <?php echo ($user['phone'] ? 'style="display:none;"' : ''); ?>>

@@ -1,8 +1,8 @@
 <?php
+ob_start(); // Prevent "headers already sent" warning
 // wishlist.php
-$title = "My Wishlist - Gowilds Travel";
+$title = "My Wishlist - MyEasyTrip";
 include 'includes/header.php';
-require_once 'admin/includes/db.php';
 
 // Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
@@ -24,10 +24,15 @@ if (isset($_GET['remove'])) {
 $query = "SELECT w.id as wishlist_id, t.* 
           FROM wishlist w 
           JOIN tours t ON w.tour_id = t.id 
-          WHERE w.user_id = $user_id 
-          ORDER BY w.created_at DESC";
+          WHERE w.user_id = $user_id
+          ORDER BY w.id DESC";
 $result = $conn->query($query);
 ?>
+
+<style>
+    /* Final bypass for any preloader issues */
+    .preloader { display: none !important; opacity: 0 !important; visibility: hidden !important; }
+</style>
 
 <section class="page-title-area text-white bg_cover" style="background-image: url(assets/images/bg/page-bg-1.jpg); padding: 50px 0;">
     <div class="container text-center">
@@ -128,3 +133,4 @@ $result = $conn->query($query);
 </style>
 
 <?php include 'includes/footer.php'; ?>
+<?php ob_end_flush(); ?>

@@ -1,5 +1,6 @@
 <?php
 // includes/header.php
+session_name("GoWilds_Session");
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -27,7 +28,19 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
     <meta name="description" content="Adventure, Tours, Travel">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!--====== Title ======-->
-    <title><?php echo isset($title) ? $title : 'Gowilds - Tours and Travel HTML Template'; ?></title>
+    <title><?php echo isset($title) ? $title : 'MyEasyTrip - We Make Your Travel Easy'; ?></title>
+    
+    <?php
+    $wishlist_count = 0;
+    if ($is_logged_in) {
+        $wc_res = $conn->query("SELECT COUNT(id) as total FROM wishlist WHERE user_id = " . $_SESSION['user_id']);
+        if ($wc_res) {
+            $wc_data = $wc_res->fetch_assoc();
+            $wishlist_count = $wc_data['total'];
+        }
+    }
+    ?>
+
     <!--====== Jquery js ======-->
     <script src="assets/vendor/jquery-3.6.0.min.js"></script>
     <!--====== Bootstrap js ======-->
@@ -64,8 +77,19 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
 
     <style>
         /* Essential theme overrides only */
-        .nice-select .list {
+        .header-area {
+            position: relative !important;
             z-index: 9999 !important;
+            /* Force header to the very front */
+        }
+
+        .main-menu .navigation>li>.sub-menu {
+            z-index: 99999 !important;
+            /* Drodowns must be higher than header */
+        }
+
+        .nice-select .list {
+            z-index: 99999 !important;
         }
     </style>
 </head>
@@ -136,7 +160,8 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
                                 <ul class="d-flex justify-content-end align-items-center">
                                     <?php if ($is_logged_in): ?>
                                         <li class="pe-3 text-white"><i class="fas fa-user-circle me-2"></i>Hello,
-                                            <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Traveler'); ?></li>
+                                            <?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Traveler'); ?>
+                                        </li>
                                         <li class="pe-3"><a href="my-bookings.php"><i class="fas fa-briefcase me-1"></i>My
                                                 Bookings</a></li>
                                         <li class="pe-3"><a href="logout.php"><i
@@ -171,7 +196,7 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
                 <div class="primary-menu black-bg px-0">
                     <!--====== Site Branding ======-->
                     <div class="site-brading ">
-                        <a href="index.php" class="brand-logo"><img src="assets/images/logo-black.png" alt="Logo"></a>
+                        <a href="index.php" class="brand-logo"><img src="assets/images/logo.png" alt="MyEasyTrip Logo"></a>
                     </div>
                     <!--====== Nav Menu ======-->
                     <div class="nav-menu">
@@ -206,15 +231,15 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
                                         ];
 
                                         foreach ($master_categories as $cat) {
-                                            echo '<li><a href="tour.php?category='.urlencode($cat).'">'.htmlspecialchars($cat).'</a></li>';
+                                            echo '<li><a href="tour.php?category=' . urlencode($cat) . '">' . htmlspecialchars($cat) . '</a></li>';
                                         }
 
                                         // Also show any other unique categories that might exist in the DB
-                                        $nav_cat_query = "SELECT DISTINCT category FROM tours WHERE category NOT IN ('".implode("','", $master_categories)."') AND status = 'active' ORDER BY category";
+                                        $nav_cat_query = "SELECT DISTINCT category FROM tours WHERE category NOT IN ('" . implode("','", $master_categories) . "') AND status = 'active' ORDER BY category";
                                         $nav_cat_res = $conn->query($nav_cat_query);
                                         if ($nav_cat_res && $nav_cat_res->num_rows > 0) {
-                                            while($nav_cat = $nav_cat_res->fetch_assoc()) {
-                                                echo '<li><a href="tour.php?category='.urlencode($nav_cat['category']).'">'.htmlspecialchars($nav_cat['category']).'</a></li>';
+                                            while ($nav_cat = $nav_cat_res->fetch_assoc()) {
+                                                echo '<li><a href="tour.php?category=' . urlencode($nav_cat['category']) . '">' . htmlspecialchars($nav_cat['category']) . '</a></li>';
                                             }
                                         }
                                         ?>
@@ -223,7 +248,7 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
                                 <li class="menu-item has-children"><a href="https://www.myeasytrip.in/">Flight
                                         bookings</a></li>
                                 <li class="menu-item has-children"><a href="visa-service.php">Visa services</a></li>
-                                <li class="menu-item"><a href="wishlist.php">Wishlist</a></li>
+                                <li class="menu-item"><a href="wishlist.php">Wishlist <span class="badge bg-primary wishlist-badge" id="header-wishlist-count" style="font-size: 10px; vertical-align: top; border-radius: 50%; padding: 3px 6px; <?php echo $wishlist_count == 0 ? 'display:none;' : ''; ?>"><?php echo $wishlist_count; ?></span></a></li>
                                 <li class="menu-item"><a href="contact.php">Contact</a></li>
                             </ul>
 

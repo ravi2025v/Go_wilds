@@ -1,5 +1,7 @@
 <?php
 // auth_handler.php
+session_name("GoWilds_Session");
+session_name("GoWilds_Session");
 session_start();
 require_once 'admin/includes/db.php';
 
@@ -74,50 +76,94 @@ if ($action === 'register') {
 if ($action === 'social_login') {
     $data = json_decode(file_get_contents('php://input'), true);
     $token = $data['token'] ?? '';
+    $provider = $data['provider'] ?? '';
 
     if (!empty($token)) {
-        // Decode JWT payload (middle part)
-        $parts = explode('.', $token);
-        if (count($parts) === 3) {
-            $payload = json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $parts[1])), true);
+        $email = '';
+        $name = '';
+        $social_id = '';
+
+        if ($provider === 'Google') {
+            // Verify Google ID Token
+            $verify_url = "https://oauth2.googleapis.com/tokeninfo?id_token=" . $token;
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $verify_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response_data = curl_exec($ch);
+            curl_close($ch);
             
-            if ($payload && isset($payload['email'])) {
+            $payload = json_decode($response_data, true);
+            if (isset($payload['email'])) {
                 $email = $conn->real_escape_string($payload['email']);
                 $name = $conn->real_escape_string($payload['name'] ?? 'Social User');
-                $google_id = $conn->real_escape_string($payload['sub']);
-
-                // Check if user exists
-                $user_res = $conn->query("SELECT * FROM users WHERE email = '$email'");
-                if ($user_res->num_rows > 0) {
-                    $user = $user_res->fetch_assoc();
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['user_name'] = $user['name'];
-                    $_SESSION['user_email'] = $user['email'];
-                    
-                    if (empty($user['phone'])) {
-                        $_SESSION['phone_verified'] = 0;
-                        $response = ['status' => 'success', 'message' => 'Please verify mobile', 'needsPhone' => true];
-                    } else {
-                        $_SESSION['user_phone'] = $user['phone'];
-                        $_SESSION['phone_verified'] = 1;
-                        $response = ['status' => 'success', 'message' => 'Logged in!'];
-                    }
-                } else {
-                    // Create new user for social login
-                    $reg_query = "INSERT INTO users (name, email, password, created_at, phone_verified) VALUES ('$name', '$email', 'SOCIAL_AUTH_".uniqid()."', NOW(), 0)";
-                    if ($conn->query($reg_query)) {
-                        $_SESSION['user_id'] = $conn->insert_id;
-                        $_SESSION['user_name'] = $name;
-                        $_SESSION['user_email'] = $email;
-                        $_SESSION['user_phone'] = '';
-                        $_SESSION['phone_verified'] = 0;
-                        $response = ['status' => 'success', 'message' => 'Social login successful!', 'needsPhone' => true];
-                    }
+                $social_id = $conn->real_escape_string($payload['sub']);
+            }
+        } elseif ($provider === 'Facebook') {
+            // Verify Facebook Access Token and get user profile
+            $verify_url = "https://graph.facebook.com/me?access_token={$token}&fields=id,name,email";
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $verify_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response_data = curl_exec($ch);
+            curl_close($ch);
+            
+            $payload = json_decode($response_data, true);
+            if (isset($payload['email']) || isset($payload['id'])) {
+                $email = $conn->real_escape_string($payload['email'] ?? '');
+                $name = $conn->real_escape_string($payload['name'] ?? 'Facebook User');
+                $social_id = $conn->real_escape_string($payload['id']);
+                
+                // If email is missing (FB user didn't share it), use a unique placeholder or handle accordingly
+                if (empty($email)) {
+                    $email = "fb_" . $social_id . "@facebook.com";
                 }
             }
         }
+
+        if (!empty($email)) {
+            // Check if user exists by email
+            $user_res = $conn->query("SELECT * FROM users WHERE email = '$email'");
+            if ($user_res->num_rows > 0) {
+                $user = $user_res->fetch_assoc();
+                
+                // Update social_id if not set (optional syncing)
+                // $conn->query("UPDATE users SET social_id = '$social_id' WHERE id = " . $user['id']);
+
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_name'] = $user['name'];
+                $_SESSION['user_email'] = $user['email'];
+                
+                if (empty($user['phone'])) {
+                    $_SESSION['phone_verified'] = 0;
+                    $response = ['status' => 'success', 'message' => 'Please verify mobile', 'needsPhone' => true];
+                } else {
+                    $_SESSION['user_phone'] = $user['phone'];
+                    $_SESSION['phone_verified'] = 1;
+                    $response = ['status' => 'success', 'message' => 'Logged in!'];
+                }
+            } else {
+                // Create new user for social login
+                $password = password_hash(uniqid(), PASSWORD_DEFAULT);
+                $reg_query = "INSERT INTO users (name, email, password, role, created_at, phone_verified) 
+                              VALUES ('$name', '$email', '$password', 'user', NOW(), 0)";
+                
+                if ($conn->query($reg_query)) {
+                    $_SESSION['user_id'] = $conn->insert_id;
+                    $_SESSION['user_name'] = $name;
+                    $_SESSION['user_email'] = $email;
+                    $_SESSION['user_phone'] = '';
+                    $_SESSION['phone_verified'] = 0;
+                    $response = ['status' => 'success', 'message' => 'Social login successful!', 'needsPhone' => true];
+                } else {
+                    $response['message'] = 'Database error during social signup: ' . $conn->error;
+                }
+            }
+        } else {
+            $response['message'] = 'Could not verify ' . $provider . ' account.';
+        }
     }
 }
+
 
 
 if ($action === 'send_otp') {

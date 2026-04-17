@@ -1,5 +1,6 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
+    session_name("GoWilds_Session");
     session_start();
 }
 if (!isset($_SESSION['admin_id'])) {

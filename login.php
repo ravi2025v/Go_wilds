@@ -1,10 +1,12 @@
 <?php
 // login.php
+session_name("GoWilds_Session");
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
 require_once 'admin/includes/db.php';
+require_once 'config/social_auth.php';
 
 // Redirect if already logged in
 if (isset($_SESSION['user_id'])) {
@@ -28,6 +30,13 @@ $redirect_url = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) :
     <link rel="stylesheet" href="assets/fonts/fontawesome/css/all.min.css">
     <!--====== Google Fonts ======-->
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!--====== Google Login SDK ======-->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <!--====== Facebook SDK ======-->
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
     
     <style>
         :root {
@@ -176,10 +185,45 @@ $redirect_url = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) :
         .social-login p::before { left: 0; }
         .social-login p::after { right: 0; }
 
-        #g_id_signin {
+        .social-btns {
             display: flex;
+            gap: 15px;
             justify-content: center;
         }
+
+        .social-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            background: #fff;
+            color: #444;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .social-btn:hover {
+            background: #f8f9fa;
+            border-color: #ccc;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .social-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .btn-google { color: #444; }
+        .btn-facebook { color: #1877F2; border-color: #1877F2; background-color: rgba(24, 119, 242, 0.05); }
+        .btn-facebook:hover { background-color: #1877F2; color: #fff; }
 
         .alert {
             border-radius: 10px;
@@ -256,7 +300,7 @@ $redirect_url = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) :
 <div class="auth-wrapper">
     <div class="auth-card">
         <div class="auth-logo">
-            <a href="index.php"><img src="assets/images/logo-black.png" alt="Logo"></a>
+            <a href="index.php"><img src="assets/images/logo.png" alt="MyEasyTrip Logo"></a>
         </div>
 
         <div id="auth-alert" class="alert alert-danger"></div>
@@ -287,7 +331,20 @@ $redirect_url = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) :
 
             <div class="social-login">
                 <p><span>Or continue with</span></p>
-                <div id="g_id_signin"></div>
+                <div class="social-btns">
+                    <!-- Google Button Handler -->
+                    <div id="google-btn-wrapper" style="flex:1;">
+                        <a href="javascript:void(0)" onclick="handleGoogleLogin()" class="social-btn btn-google">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
+                            Google
+                        </a>
+                    </div>
+                    
+                    <a href="javascript:void(0)" onclick="handleFacebookLogin()" class="social-btn btn-facebook">
+                        <i class="fab fa-facebook-f"></i>
+                        Facebook
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -335,21 +392,80 @@ $redirect_url = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) :
     </div>
 </div>
 
-<!--====== Google Login Script ======-->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<!--====== Social Login Real Integration ======-->
 <script>
-    function handleCredentialResponse(response) {
+    // Initialize Google
+    window.onload = function () {
+        if (typeof google !== 'undefined') {
+            google.accounts.id.initialize({
+                client_id: "<?php echo GOOGLE_CLIENT_ID; ?>",
+                callback: handleGoogleResponse
+            });
+        }
+        
+        // Initialize Facebook
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '<?php echo FACEBOOK_APP_ID; ?>',
+                cookie     : true,
+                xfbml      : true,
+                version    : 'v18.0'
+            });
+        };
+    };
+
+    function handleGoogleLogin() {
+        google.accounts.id.prompt(); // Also show one-tap if possible
+        // Or trigger standard popup
+        const client = google.accounts.oauth2.initCodeClient({
+            client_id: '<?php echo GOOGLE_CLIENT_ID; ?>',
+            scope: 'email profile',
+            ux_mode: 'popup',
+            callback: (response) => {
+                // This is for code flow, but we prefer ID token for simpler verification
+            },
+        });
+        
+        // Simpler way: Use the standard button or a wrapper
+        google.accounts.id.renderButton(
+            document.getElementById("google-btn-wrapper"),
+            { theme: "outline", size: "large", width: "100%" } 
+        );
+        
+        // Just trigger the selection for now
+        google.accounts.id.prompt();
+    }
+
+    function handleGoogleResponse(response) {
+        processSocialAuth(response.credential, 'Google');
+    }
+
+    function handleFacebookLogin() {
+        FB.login(function(response) {
+            if (response.status === 'connected') {
+                processSocialAuth(response.authResponse.accessToken, 'Facebook');
+            } else {
+                showAlert('Facebook login cancelled');
+            }
+        }, {scope: 'public_profile,email'});
+    }
+
+    function processSocialAuth(token, provider) {
+        showAlert('Verifying ' + provider + ' account...', 'success');
+        
         $.ajax({
             url: 'auth_handler.php?action=social_login',
             type: 'POST',
-            data: JSON.stringify({ token: response.credential }),
+            data: JSON.stringify({ 
+                token: token, 
+                provider: provider
+            }),
             contentType: 'application/json',
             success: function(resp) {
                 if (resp.status === 'success') {
                     if (resp.needsPhone) {
                         goToStep('mobile');
-                        $('#auth-alert').hide();
-                        showAlert('Social login successful! Please link your mobile number.', 'success');
+                        showAlert(provider + ' connected! Please link your mobile number to complete setup.', 'success');
                     } else {
                         window.location.href = "<?php echo $redirect_url; ?>";
                     }
@@ -358,17 +474,6 @@ $redirect_url = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) :
                 }
             }
         });
-    }
-
-    window.onload = function () {
-        google.accounts.id.initialize({
-            client_id: "784949162463-m58079m463qu2jnt390237m0i6hgehie.apps.googleusercontent.com", // Example ID, replace with real one if available
-            callback: handleCredentialResponse
-        });
-        google.accounts.id.renderButton(
-            document.getElementById("g_id_signin"),
-            { theme: "outline", size: "large", width: 350, border_radius: 10 }
-        );
     }
 </script>
 

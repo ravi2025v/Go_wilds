@@ -1,5 +1,6 @@
 <?php
 // otp_handler.php
+session_name("GoWilds_Session");
 session_start();
 require_once 'admin/includes/db.php';
 

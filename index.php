@@ -1,4 +1,8 @@
 <?php
+/**
+ * GoWilds - Professional Adventure & Travel Website
+ * Specialized for Hero and CTA modern sections.
+ */
 include 'includes/header.php';
 require_once 'admin/includes/db.php';
 
@@ -15,72 +19,70 @@ $testimonial_query = "SELECT r.*, t.title as tour_name, u.name as user_name FROM
 $testimonial_result = $conn->query($testimonial_query);
 ?>
 
+    <!--====== Custom Professional Hero CSS ======-->
+    <link rel="stylesheet" href="assets/css/hero-professional.css">
+
     <!--====== Start Hero Section ======-->
-    <section class="hero-section">
-        <div class="hero-wrapper-three">
-            <div class="hero-arrows"></div>
-            <div class="hero-slider-three">
-                <!--=== Single Slider ===-->
-                <div class="single-slider">
-                    <div class="image-layer bg_cover" style="background-image: url(assets/images/slider-1.jpg);"></div>
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-xl-7">
-                                <!--=== Hero Content ===-->
-                                <div class="hero-content text-white">
-                                    <span class="sub-title">Welcome to GoWilds</span>
-                                    <h1 data-animation="fadeInDown" data-delay=".4s">Tour Travel
-                                        & Adventure</h1>
-                                    <div class="hero-button" data-animation="fadeInRight" data-delay=".6s">
-                                        <a href="tour.php" class="main-btn primary-btn">Explore More<i
-                                                class="fas fa-paper-plane"></i></a>
-                                        <a href="about.php" class="main-btn secondary-btn">Learn More<i
-                                                class="fas fa-paper-plane"></i></a>
+    <section class="professional-hero">
+        <div class="hero-slider-modern hero-slider-three">
+            <!--=== Single Slider ===-->
+            <div class="single-slider-modern bg_cover" style="background-image: url(https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80);"></div>
+            <!--=== Single Slider ===-->
+            <div class="single-slider-modern bg_cover" style="background-image: url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80);"></div>
+            <!--=== Single Slider ===-->
+            <div class="single-slider-modern bg_cover" style="background-image: url(https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?auto=format&fit=crop&w=1920&q=80);"></div>
+        </div>
+        
+        <!-- Restoring Arrows for JS compatibility -->
+        <div class="hero-arrows"></div>
+        
+        <div class="hero-content-overlay">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-10">
+                        <div class="hero-text-box text-center">
+                            <span class="modern-badge wow fadeInDown">Discover Your Next Adventure</span>
+                            <h1 class="modern-title wow fadeInUp" data-wow-delay=".2s">Experience the World <br>Beyond <span class="accent-text">Boundaries</span></h1>
+                            <p class="modern-desc wow fadeInUp" data-wow-delay=".4s">Curated travel experiences for the modern explorer. From wild safaris to serene beaches, find your perfect escape.</p>
+                            
+                            <!-- Modern Search Bar -->
+                            <div class="modern-search-wrapper wow fadeInUp" data-wow-delay=".6s">
+                                <form action="tour.php" method="GET" class="modern-search-form">
+                                    <div class="search-item">
+                                        <label><i class="fas fa-map-marker-alt"></i> Destination</label>
+                                        <input type="text" name="search" placeholder="Where are you going?" autocomplete="off">
                                     </div>
-                                </div>
+                                    <div class="search-item">
+                                        <label><i class="fas fa-th-large"></i> Category</label>
+                                        <select name="category">
+                                            <option value="">All Types</option>
+                                            <option value="Wild Safari">Wild Safari</option>
+                                            <option value="Trek">Trekking</option>
+                                            <option value="Domestic Destinations">Domestic</option>
+                                            <option value="International Destinations">International</option>
+                                        </select>
+                                    </div>
+                                    <div class="search-item-btn">
+                                        <button type="submit" class="search-btn-modern">
+                                            <i class="fas fa-search"></i> Search
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <!--=== Single Slider ===-->
-                <div class="single-slider">
-                    <div class="image-layer bg_cover" style="background-image: url(assets/images/slider-2.jpg);"></div>
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-xl-7">
-                                <!--=== Hero Content ===-->
-                                <div class="hero-content text-white">
-                                    <span class="sub-title">Welcome to GoWilds</span>
-                                    <h1 data-animation="fadeInDown" data-delay=".4s">Tour Travel
-                                        & Camping</h1>
-                                    <div class="hero-button" data-animation="fadeInRight" data-delay=".6s">
-                                        <a href="tour.php" class="main-btn primary-btn">Explore More<i
-                                                class="fas fa-paper-plane"></i></a>
-                                        <a href="about.php" class="main-btn secondary-btn">Learn More<i
-                                                class="fas fa-paper-plane"></i></a>
-                                    </div>
+                            
+                            <!-- Stats/Features -->
+                            <div class="hero-stats wow fadeInUp" data-wow-delay=".8s">
+                                <div class="stat-item">
+                                    <span class="stat-num">150+</span>
+                                    <span class="stat-label">Destinations</span>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--=== Single Slider ===-->
-                <div class="single-slider">
-                    <div class="image-layer bg_cover" style="background-image: url(assets/images/slider-3.jpg);"></div>
-                    <div class="container">
-                        <div class="row align-items-center">
-                            <div class="col-xl-7">
-                                <!--=== Hero Content ===-->
-                                <div class="hero-content text-white">
-                                    <span class="sub-title">Welcome to GoWilds</span>
-                                    <h1 data-animation="fadeInDown" data-delay=".4s">Tour Travel
-                                        & Adventure</h1>
-                                    <div class="hero-button" data-animation="fadeInRight" data-delay=".6s">
-                                        <a href="tour.php" class="main-btn primary-btn">Explore More<i
-                                                class="fas fa-paper-plane"></i></a>
-                                        <a href="about.php" class="main-btn secondary-btn">Learn More<i
-                                                class="fas fa-paper-plane"></i></a>
-                                    </div>
+                                <div class="stat-item border-left-stat">
+                                    <span class="stat-num">24/7</span>
+                                    <span class="stat-label">Expert Support</span>
+                                </div>
+                                <div class="stat-item border-left-stat">
+                                    <span class="stat-num">100%</span>
+                                    <span class="stat-label">Secure Booking</span>
                                 </div>
                             </div>
                         </div>
@@ -433,70 +435,67 @@ $testimonial_result = $conn->query($testimonial_query);
 
     <!--End Of Feature Tour-->
 
-    <section class="cta-bg overlay bg_cover pt-150 pb-150" style="background-image: url(assets/images/bg-01.jpg);">
+    <!--====== Modern Sections CSS ======-->
+    <link rel="stylesheet" href="assets/css/modern-sections.css">
+
+    <!--====== Start Modern CTA Section ======-->
+    <section class="modern-cta-section">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-xl-7 col-lg-8">
-                    <div class="play-box ">
-                        <a href="https://www.youtube.com/watch?v=ibuUmMhD2Pg" class="video-popup"><i
-                                class="fas fa-play"></i></a>
-                    </div>
-                    <div class="section-title pt-3">
-                        <span class="sub-title2">About Company</span>
-                    </div>
-                    <div class="cta-content-box text-white pt-3">
-                        <h2 class="mb-35 text-white">Ready to Travel With real adventure and enjoy natural</h2>
-                        <a href="tour.php" class="btn btn-green">Check Availability</a>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="cta-video-box wow fadeInLeft">
+                        <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80" alt="Video Background">
+                        <a href="https://www.youtube.com/watch?v=ibuUmMhD2Pg" class="modern-play-btn video-popup">
+                            <i class="fas fa-play"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="col-xl-5 col-lg-4">
-                    <!--=== Play Box ===-->
-                    <div class="row mt-4 mt-lg-0">
-                        <div class="col-lg-6 col-md-6 pb-3">
-                            <div class="tour-info3 text-center">
-                                <div class="icon">
-                                    <i class="flaticon-camp"></i>
+                <div class="col-xl-7 col-lg-6">
+                    <div class="cta-content-inner wow fadeInRight">
+                        <h2 class="cta-title">Ready to Travel With real adventure and enjoy natural</h2>
+                        <a href="tour.php" class="search-btn-modern d-inline-flex mb-40">Check Availability</a>
+                        
+                        <!-- Specialized Modern Grid -->
+                        <div class="modern-category-grid">
+                            <!-- wildlife -->
+                            <a href="tour.php?category=Wild%20Safari" class="modern-cat-card">
+                                <img src="https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=400&q=80" alt="Wildlife">
+                                <div class="modern-cat-overlay">
+                                    <div class="modern-cat-icon"><i class="flaticon-camp"></i></div>
+                                    <h4 class="modern-cat-title">Wildlife Tours</h4>
                                 </div>
-                                <div class="text  pt-3">
-                                    <h4>Wildlife <br>Tours</h4>
+                            </a>
+                            <!-- mountain -->
+                            <a href="tour.php?category=Trek" class="modern-cat-card">
+                                <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=80" alt="Mountain">
+                                <div class="modern-cat-overlay">
+                                    <div class="modern-cat-icon"><i class="flaticon-mountain"></i></div>
+                                    <h4 class="modern-cat-title">Mountain Adventure</h4>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 pb-3">
-                            <div class="tour-info3 text-center">
-                                <div class="icon">
-                                    <i class="flaticon-mountain"></i>
+                            </a>
+                            <!-- beach -->
+                            <a href="tour.php" class="modern-cat-card">
+                                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" alt="Beach">
+                                <div class="modern-cat-overlay">
+                                    <div class="modern-cat-icon"><i class="flaticon-beach"></i></div>
+                                    <h4 class="modern-cat-title">Beach Holidays</h4>
                                 </div>
-                                <div class="text pt-3">
-                                    <h4>Mountain <br>Adventure</h4>
+                            </a>
+                            <!-- camping -->
+                            <a href="tour.php" class="modern-cat-card">
+                                <img src="https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&w=400&q=80" alt="Camping">
+                                <div class="modern-cat-overlay">
+                                    <div class="modern-cat-icon"><i class="flaticon-camp-1"></i></div>
+                                    <h4 class="modern-cat-title">Camping Nights</h4>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 pb-3">
-                            <div class="tour-info3 text-center">
-                                <div class="icon">
-                                    <i class="flaticon-beach"></i>
-                                </div>
-                                <div class="text pt-3">
-                                    <h4>Beach <br>Holidays</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 pb-3">
-                            <div class="tour-info3 text-center">
-                                <div class="icon">
-                                    <i class="flaticon-camp-1"></i>
-                                </div>
-                                <div class="text pt-3">
-                                    <h4>Camping <br>Nights</h4>
-                                </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <!--====== End Modern CTA Section ======-->
 
 
     <section class=" pt-100">

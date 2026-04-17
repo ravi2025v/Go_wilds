@@ -1,4 +1,5 @@
 <?php
+session_name("GoWilds_Session");
 session_start();
 require_once 'admin/includes/db.php';
 
@@ -27,22 +28,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $tour = $tour_res->fetch_assoc();
 
-    // Hotel logic
+    // Hotel logic and Base Price
+    $basePrice = $tour['price'];
     $hotel_type = $conn->real_escape_string($_POST['hotel_type']);
-    $hotel_price = 0;
+    $upgrade_price = 0;
     switch ($hotel_type) {
-        case '3*': $hotel_price = $tour['price_3star']; break;
-        case '4*': $hotel_price = $tour['price_4star']; break;
-        case '5*': $hotel_price = $tour['price_5star']; break;
-        case 'Camps': $hotel_price = $tour['price_camps']; break;
-        case 'Homestay': $hotel_price = $tour['price_homestay']; break;
-        default: $hotel_price = 0; $hotel_type = 'Budget'; break;
+        case '3*': $upgrade_price = $tour['price_3star']; break;
+        case '4*': $upgrade_price = $tour['price_4star']; break;
+        case '5*': $upgrade_price = $tour['price_5star']; break;
+        case 'Camps': $upgrade_price = $tour['price_camps']; break;
+        case 'Homestay': $upgrade_price = $tour['price_homestay']; break;
+        default: $upgrade_price = 0; $hotel_type = 'Budget'; break;
     }
 
-    // Calculate Price
-    $basePrice = $tour['price'];
+    // Save total per-pax price (base + upgrade)
+    $hotel_price = $basePrice + $upgrade_price;
+
+    // Calculate Total Booking Price
     $totalPeople = $adults + $children;
-    $total_price = (($basePrice + $hotel_price) * $totalPeople) + 50 + (20 * ($totalPeople + $infants));
+    $total_price = ($hotel_price * $totalPeople) + 50 + (20 * ($totalPeople + $infants));
 
     // Convert date to Y-m-d if it's in dd/mm/yyyy or similar
     $formatted_tour_date = date('Y-m-d', strtotime($tour_date));

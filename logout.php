@@ -1,4 +1,5 @@
 <?php
+session_name("GoWilds_Session");
 session_start();
 session_unset();
 session_destroy();
