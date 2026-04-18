@@ -1,0 +1,97 @@
+/* assets/css/choose-modern.css */
+.choose-modern-section {
+    padding: 80px 0;
+    background: #f8f9fa;
+    position: relative;
+    overflow: hidden;
+}
+
+.choose-modern-section .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.choose-modern-section .section-header .sub-title {
+    background: rgba(99, 171, 69, 0.1);
+    color: #63AB45;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.choose-modern-section .section-header h2 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #1a1a1a;
+}
+
+.choose-modern-section .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.choose-modern-section .feature-card-modern {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.choose-modern-section .feature-card-modern:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    border-color: rgba(99, 171, 69, 0.3);
+}
+
+.choose-modern-section .card-icon-modern {
+    width: 60px;
+    height: 60px;
+    background: #63AB45;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    font-size: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 20px rgba(99, 171, 69, 0.2);
+    transition: all 0.3s ease;
+}
+
+.choose-modern-section .feature-card-modern:hover .card-icon-modern {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.choose-modern-section .feature-card-modern h4 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #1a1a1a;
+}
+
+.choose-modern-section .feature-card-modern p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #666;
+    margin-bottom: 0;
+}
+
+@media (max-width: 767px) {
+    .choose-modern-section .section-header h2 {
+        font-size: 32px;
+    }
+    .choose-modern-section .feature-grid {
+        grid-template-columns: 1fr;
+    }
+}

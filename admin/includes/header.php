@@ -13,7 +13,7 @@ if (!isset($_SESSION['admin_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Gowilds</title>
+    <title>Admin Dashboard - MyEasyTrip</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome -->
@@ -38,7 +38,11 @@ if (!isset($_SESSION['admin_id'])) {
 <div class="d-flex">
     <!-- Sidebar -->
     <div class="sidebar col-md-2 d-none d-md-block">
-        <div class="brand text-center"><i class="fas fa-route text-primary"></i> Gowilds</div>
+        <div class="brand text-center">
+            <a href="index.php">
+                <img src="../assets/images/logo.png" alt="MyEasyTrip Logo" style="height: 50px; width: auto;">
+            </a>
+        </div>
         <div class="px-3">
             <a href="index.php" <?php if(basename($_SERVER['PHP_SELF']) == 'index.php') echo 'class="active"'; ?>><i class="fas fa-home me-2"></i> Dashboard</a>
             <a href="tours.php" <?php if(basename($_SERVER['PHP_SELF']) == 'tours.php') echo 'class="active"'; ?>><i class="fas fa-map-marked-alt me-2"></i> Manage Tours</a>

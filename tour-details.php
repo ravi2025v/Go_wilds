@@ -1,7 +1,9 @@
 <?php
 include 'includes/header.php';
 require_once 'admin/includes/db.php';
+// die("DEBUG: Page reached after includes");
 ?>
+<link rel="stylesheet" href="assets/css/tour-gallery.css">
 <?php
 
 // Get tour ID from URL
@@ -58,18 +60,81 @@ if ($reviews_result && $reviews_result->num_rows > 0) {
 $avg_rating = count($reviews) > 0 ? round($total_rating / count($reviews), 1) : 0;
 
 // Fetch related tours
-$related_query = "SELECT * FROM tours WHERE category = '" . $conn->real_escape_string($tour['category']) . "' AND id != $tour_id LIMIT 6";
+$related_query = "SELECT * FROM tours WHERE category = '" . $conn->real_escape_string($tour['category'] ?? '') . "' AND id != $tour_id LIMIT 6";
 $related_result = $conn->query($related_query);
+
+// Self-healing: Ensure gallery table exists
+$conn->query("CREATE TABLE IF NOT EXISTS tour_gallery (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tour_id INT(11) NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)");
+
+// Fetch gallery images
+$gallery_items = [];
+if (isset($tour['image'])) {
+    $gallery_items[] = ['image' => $tour['image']];
+}
+
+$gal_res = $conn->query("SELECT image FROM tour_gallery WHERE tour_id = $tour_id ORDER BY id ASC");
+if ($gal_res && $gal_res->num_rows > 0) {
+    while($gal_row = $gal_res->fetch_assoc()) {
+        $gallery_items[] = $gal_row;
+    }
+}
 ?>
+<style>
+    /* Absolute override to ensure page content is visible */
+    .preloader { display: none !important; pointer-events: none !important; opacity: 0 !important; visibility: hidden !important; }
+    #preloader { display: none !important; }
+</style>
+<script>
+    // Immediate preloader kill
+    (function() {
+        var kill = function() {
+            var p = document.querySelector('.preloader') || document.getElementById('preloader');
+            if(p) p.style.setProperty('display', 'none', 'important');
+        };
+        kill();
+        window.addEventListener('load', kill);
+        setTimeout(kill, 500);
+        setTimeout(kill, 1000);
+        setTimeout(kill, 2000);
+    })();
+</script>
 
 <!--====== Start Place Details Section ======-->
 <section class="place-details-section">
-    <!--=== Single Place Image (No Slider) ===-->
-    <div class="place-img-area wow fadeInUp">
-        <div class="place-img">
-            <img src="<?php echo htmlspecialchars($tour['image']); ?>" alt="Place Image"
-                style="height: 550px; width: 100%; object-fit: cover;"
-                onerror="this.onerror=null; this.src='assets/images/tour.jpg'">
+    <!--=== Tour Gallery Area (Dynamic Slider) ===-->
+    <div class="place-img-area">
+        <div class="container-fluid px-lg-5">
+            <div class="tour-gallery-wrapper">
+                <!-- Main Slider -->
+                <div class="swiper main-gallery-slider">
+                    <div class="swiper-wrapper">
+                        <?php foreach($gallery_items as $item): ?>
+                        <div class="swiper-slide">
+                            <img src="<?php echo htmlspecialchars($item['image']); ?>" alt="Tour Image" onerror="this.onerror=null; this.src='assets/images/tour.jpg'">
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <!-- Navigation -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+                
+                <!-- Thumbnails Slider (Right Side) -->
+                <div class="swiper thumb-gallery-slider d-none d-lg-block">
+                    <div class="swiper-wrapper">
+                        <?php foreach($gallery_items as $item): ?>
+                        <div class="swiper-slide">
+                            <img src="<?php echo htmlspecialchars($item['image']); ?>" alt="Thumbnail" onerror="this.onerror=null; this.src='assets/images/tour.jpg'">
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="container">
@@ -830,6 +895,40 @@ $related_result = $conn->query($related_query);
         });
         updatePrice();
     }, 500);
+</script>
+
+<script>
+    // Resilient Swiper Initialization
+    window.addEventListener('load', function() {
+        if (typeof Swiper !== 'undefined' && document.querySelector('.thumb-gallery-slider')) {
+            try {
+                var thumbsSwiper = new Swiper(".thumb-gallery-slider", {
+                    direction: "vertical",
+                    spaceBetween: 15,
+                    slidesPerView: "auto",
+                    freeMode: true,
+                    watchSlidesProgress: true,
+                    breakpoints: {
+                        0: { direction: "horizontal" },
+                        992: { direction: "vertical" }
+                    }
+                });
+
+                var mainSwiper = new Swiper(".main-gallery-slider", {
+                    spaceBetween: 10,
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev",
+                    },
+                    thumbs: {
+                        swiper: thumbsSwiper,
+                    },
+                });
+            } catch (err) {
+                console.warn("Swiper Init handled:", err);
+            }
+        }
+    });
 </script>
 
 <?php include 'includes/footer.php'; ?>

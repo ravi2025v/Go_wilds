@@ -1,0 +1,111 @@
+/* assets/css/mission-modern.css */
+.mission-vision-section {
+    padding: 40px 0 80px;
+    background: #fdfdfd;
+    position: relative;
+    overflow: hidden;
+}
+
+.mission-vision-section::before {
+    content: "";
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: rgba(99, 171, 69, 0.03);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.mission-vision-section .section-header-modern {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 30px;
+}
+
+.mission-vision-section .section-header-modern .sub-title {
+    color: #63AB45;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.mission-vision-section .section-header-modern h2 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #1a1a1a;
+    line-height: 1.2;
+}
+
+.mission-vision-section .mission-cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.mission-vision-section .mission-card {
+    background: #fff;
+    padding: 35px 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    border: 1px solid #f0f0f0;
+}
+
+.mission-vision-section .mission-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    border-color: #63AB45;
+}
+
+.mission-vision-section .mission-card .card-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(99, 171, 69, 0.1);
+    color: #63AB45;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    transition: all 0.4s ease;
+}
+
+.mission-vision-section .mission-card:hover .card-icon {
+    background: #63AB45;
+    color: #fff;
+    transform: rotateY(180deg);
+}
+
+.mission-vision-section .mission-card h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #1a1a1a;
+}
+
+.mission-vision-section .mission-card p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #666;
+    margin: 0;
+}
+
+
+
+@media (max-width: 991px) {
+    .mission-vision-section .mission-cards-wrapper {
+        grid-template-columns: 1fr;
+    }
+    .mission-vision-section .mission-card {
+        padding: 40px 30px;
+    }
+}

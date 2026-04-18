@@ -74,6 +74,9 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
     <link rel="stylesheet" href="assets/css/default.css">
     <!--====== Style css ======-->
     <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Swiper Slider (Required for Tour Gallery) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
     <style>
         /* Essential theme overrides only */

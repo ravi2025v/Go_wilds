@@ -1,0 +1,121 @@
+/* assets/css/passion-modern.css */
+.passion-modern-section {
+    position: relative;
+    padding: 120px 0;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Parallax effect */
+    color: #fff;
+    overflow: hidden;
+}
+
+.passion-modern-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #1a1a1a 0%, rgba(26, 26, 26, 0.7) 100%);
+    z-index: 1;
+}
+
+.passion-modern-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.passion-modern-section .passion-image-wrapper {
+    position: relative;
+    text-align: right;
+}
+
+.passion-modern-section .passion-image-wrapper img {
+    width: 100%;
+    max-width: 500px;
+    height: 450px;
+    object-fit: cover;
+    border-radius: 30px;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes slowFloat {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+.passion-modern-section .passion-content {
+    max-width: 100%;
+}
+
+.passion-modern-section .sub-title {
+    display: inline-block;
+    background: #63AB45;
+    color: #fff;
+    padding: 8px 25px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 15px rgba(99, 171, 69, 0.4);
+}
+
+.passion-modern-section h2 {
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+.passion-modern-section h2 span {
+    color: #63AB45;
+}
+
+.passion-modern-section p {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 45px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.passion-modern-section .btn-passion {
+    display: inline-block;
+    padding: 18px 45px;
+    background: #63AB45;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border: 2px solid #63AB45;
+}
+
+.passion-modern-section .btn-passion:hover {
+    background: transparent;
+    color: #fff;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(99, 171, 69, 0.4);
+}
+
+.passion-modern-section .btn-passion i {
+    margin-left: 10px;
+}
+
+@media (max-width: 991px) {
+    .passion-modern-section {
+        padding: 80px 0;
+        text-align: center;
+    }
+    .passion-modern-section .passion-content {
+        max-width: 100%;
+    }
+    .passion-modern-section h2 {
+        font-size: 38px;
+    }
+}

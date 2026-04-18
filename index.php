@@ -21,6 +21,7 @@ $testimonial_result = $conn->query($testimonial_query);
 
     <!--====== Custom Professional Hero CSS ======-->
     <link rel="stylesheet" href="assets/css/hero-professional.css">
+    <link rel="stylesheet" href="assets/css/about-modern.css">
 
     <!--====== Start Hero Section ======-->
     <section class="professional-hero">
@@ -165,80 +166,74 @@ $testimonial_result = $conn->query($testimonial_query);
     </section>
     <!--Endd of Service Section -->
 
-    <!--====== Start About Section ======-->
-    <section class="we-section pt-100 pb-50" style="background-image: url(assets/images/bg-shape-02.png">
+    <!--====== Start Modern Who We Are Section ======-->
+    <section class="about-modern-section">
         <div class="container">
-            <div class="row align-items-xl-center">
-                <div class="col-xl-6 order-2 order-xl-1">
-                    <!--=== We Image Box ===-->
-                    <div class="we-two_image-box mb-20">
-                        <div class="we-image mb-30">
-                            <img src="assets/images/abt.png" alt="we Image">
+            <div class="row align-items-center">
+                <div class="col-xl-6 col-lg-12">
+                    <div class="about-content wow fadeInLeft">
+                        <span class="sub-title-modern">Who We Are</span>
+                        <h2 class="about-title">Experience the World With Real Adventure</h2>
+                        <p class="about-desc">At MyEasyTrip, we believe that travel is more than just visiting places; it's about the stories you tell and the memories you create. Since 2014, we've been crafting unique journeys that blend authentic adventure with unmatched comfort.</p>
+                        
+                        <div class="feature-list-modern">
+                            <div class="feature-item-modern">
+                                <div class="feature-icon-modern">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="feature-info-modern">
+                                    <h4>Safety First</h4>
+                                    <p>Certified equipment and expert guides.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item-modern">
+                                <div class="feature-icon-modern">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                                <div class="feature-info-modern">
+                                    <h4>Best Prices</h4>
+                                    <p>Premium experience at competitive rates.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item-modern">
+                                <div class="feature-icon-modern">
+                                    <i class="fas fa-globe-americas"></i>
+                                </div>
+                                <div class="feature-info-modern">
+                                    <h4>Diverse Tours</h4>
+                                    <p>From local treks to global expeditions.</p>
+                                </div>
+                            </div>
+                            <div class="feature-item-modern">
+                                <div class="feature-icon-modern">
+                                    <i class="fas fa-headset"></i>
+                                </div>
+                                <div class="feature-info-modern">
+                                    <h4>24/7 Support</h4>
+                                    <p>Always there when you need us.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="about-button">
+                            <a href="about.php" class="main-btn primary-btn">Learn More About Us <i class="far fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-6 order-1 order-xl-2">
-                    <!--=== We Content Box ===-->
-                    <div class="we-content-box pl-lg-50 mb-10">
-                        <!--=== Section Title ===-->
-                        <div class="section-title mb-30">
-                            <span class="sub-title">Who We Are</span>
-                            <h2>Great Opportunity For
-                                Adventure & Travels</h2>
-                        </div>
-                        <!--=== Features List ===-->
-                        <div class="features-list_one">
-                            <!--=== Single Features List ===-->
-                            <div class="single-features-list mb-40">
-                                <div class="icon-inner d-flex align-items-center">
-                                    <div class="icon-check">
-                                        <i class="fas fa-badge-check"></i>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="flaticon-helmet"></i>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <h4>Safety First Always</h4>
-                                    <p>Your safety is our top priority. We use certified equipment and experienced guides for all adventures.</p>
-                                </div>
-                            </div>
-                            <!--=== Single Features List ===-->
-                            <div class="single-features-list mb-40">
-                                <div class="icon-inner d-flex align-items-center">
-                                    <div class="icon-check">
-                                        <i class="fas fa-badge-check"></i>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="flaticon-best-price"></i>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <h4>Low Price & Friendly</h4>
-                                    <p>Competitive pricing without compromising on the quality of your experience.</p>
-                                </div>
-                            </div>
-                            <!--=== Single Features List ===-->
-                            <div class="single-features-list mb-40">
-                                <div class="icon-inner d-flex align-items-center">
-                                    <div class="icon-check">
-                                        <i class="fas fa-badge-check"></i>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="flaticon-travel"></i>
-                                    </div>
-                                </div>
-                                <div class="content">
-                                    <h4>Trusted Travel Guide</h4>
-                                    <p>Over 10 years of experience in curating the best adventures around the world.</p>
-                                </div>
-                            </div>
+                <div class="col-xl-6 col-lg-12">
+                    <div class="about-image-wrapper wow fadeInRight text-end">
+                        <img src="https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&w=1200&q=80" alt="Exploring Nature" class="main-image">
+                        <img src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=600&q=80" alt="Luxury Camping" class="secondary-image">
+                        <div class="experience-badge">
+                            <span class="number">10+</span>
+                            <span class="text">Years of<br>Excellence</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <!--====== End Modern Who We Are Section ======-->
 
 
     <!--====== Start Populat Activities ======-->

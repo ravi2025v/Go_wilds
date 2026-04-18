@@ -1,0 +1,172 @@
+.about-modern-section {
+    position: relative;
+    padding: 80px 0 40px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.about-modern-section .about-image-wrapper {
+    position: relative;
+    padding-bottom: 50px;
+}
+
+.about-modern-section .main-image {
+    width: 90%;
+    height: 550px;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.about-modern-section .secondary-image {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 10px solid #fff;
+    z-index: 2;
+}
+
+.about-modern-section .experience-badge {
+    position: absolute;
+    top: 40px;
+    right: -30px;
+    background: #63AB45;
+    color: #fff;
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 3;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.about-modern-section .experience-badge .number {
+    display: block;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.about-modern-section .experience-badge .text {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.about-modern-section .about-content {
+    padding-right: 50px;
+}
+
+.about-modern-section .sub-title-modern {
+    display: inline-block;
+    color: #63AB45;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    position: relative;
+    padding-left: 30px;
+}
+
+.about-modern-section .sub-title-modern::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 20px;
+    height: 2px;
+    background: #63AB45;
+}
+
+.about-modern-section .about-title {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 25px;
+    color: #1a1a1a;
+}
+
+.about-modern-section .about-desc {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.about-modern-section .feature-list-modern {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 45px;
+}
+
+.about-modern-section .feature-item-modern {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.about-modern-section .feature-icon-modern {
+    width: 60px;
+    height: 60px;
+    background: rgba(99, 171, 69, 0.1);
+    color: #63AB45;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+.about-modern-section .feature-item-modern:hover .feature-icon-modern {
+    background: #63AB45;
+    color: #fff;
+    transform: translateY(-5px);
+}
+
+.about-modern-section .feature-info-modern h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.about-modern-section .feature-info-modern p {
+    font-size: 14px;
+    color: #777;
+    margin: 0;
+}
+
+@media (max-width: 1199px) {
+    .about-modern-section .about-content {
+        padding-left: 0;
+        margin-top: 50px;
+    }
+    .about-modern-section .about-title {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 767px) {
+    .about-modern-section .feature-list-modern {
+        grid-template-columns: 1fr;
+    }
+    .about-modern-section .main-image {
+        width: 100%;
+        height: 400px;
+    }
+    .about-modern-section .secondary-image {
+        width: 180px;
+        height: 180px;
+    }
+}

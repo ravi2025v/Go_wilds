@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Gowilds</title>
+    <title>Admin Login - MyEasyTrip</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome -->
@@ -94,8 +94,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="login-card">
     <div class="login-header">
-        <i class="fas fa-route brand-icon"></i>
-        <h4 class="mb-0">Gowilds Admin</h4>
+        <img src="../assets/images/logo.png" alt="MyEasyTrip Logo" style="height: 60px; width: auto; margin-bottom: 10px;">
+        <h4 class="mb-0">MyEasyTrip Admin</h4>
         <p class="text-white-50 mb-0">Sign in to manage your website</p>
     </div>
     <div class="login-body">
@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label class="form-label text-muted fw-bold">Email Address</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light"><i class="fas fa-envelope text-muted"></i></span>
-                    <input type="email" name="email" class="form-control" placeholder="admin@gowilds.com" required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                    <input type="email" name="email" class="form-control" placeholder="admin@myeasytrip.in" required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                 </div>
             </div>
             <div class="mb-4">

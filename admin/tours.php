@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once 'includes/db.php';
 
 // Check if description column exists
@@ -28,6 +27,32 @@ foreach($info_cols as $col) {
     if ($conn->query("SHOW COLUMNS FROM tours LIKE '$col'")->num_rows == 0) {
         $conn->query("ALTER TABLE tours ADD COLUMN $col VARCHAR(255) DEFAULT ''");
     }
+}
+
+// Create gallery table if not exists
+$conn->query("CREATE TABLE IF NOT EXISTS tour_gallery (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tour_id INT NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)");
+
+// Handle Delete Image from Gallery (AJAX)
+if (isset($_GET['delete_gallery_image'])) {
+    $img_id = intval($_GET['delete_gallery_image']);
+    $conn->query("DELETE FROM tour_gallery WHERE id = $img_id");
+    echo json_encode(['status' => 'success']);
+    exit;
+}
+
+// Handle Fetch Gallery for Edit (AJAX)
+if (isset($_GET['fetch_gallery'])) {
+    $tid = intval($_GET['fetch_gallery']);
+    $res = $conn->query("SELECT * FROM tour_gallery WHERE tour_id = $tid");
+    $imgs = [];
+    while($r = $res->fetch_assoc()) $imgs[] = $r;
+    echo json_encode($imgs);
+    exit;
 }
 
 // Handle Delete
@@ -92,6 +117,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_tour'])) {
     }
     
     if ($conn->query($sql)) {
+        $tour_id = ($id > 0) ? $id : $conn->insert_id;
+        
+        // Handle Gallery Uploads
+        if (isset($_FILES['gallery_files'])) {
+            $total_files = count($_FILES['gallery_files']['name']);
+            for ($i = 0; $i < $total_files; $i++) {
+                if ($_FILES['gallery_files']['error'][$i] === 0) {
+                    $target_dir = "../assets/images/tours/gallery/";
+                    if (!is_dir($target_dir)) {
+                        mkdir($target_dir, 0777, true);
+                    }
+                    $file_ext = pathinfo($_FILES["gallery_files"]["name"][$i], PATHINFO_EXTENSION);
+                    $file_name = time() . "_gal_" . $i . "." . $file_ext;
+                    $target_file = $target_dir . $file_name;
+                    
+                    if (move_uploaded_file($_FILES["gallery_files"]["tmp_name"][$i], $target_file)) {
+                        $gal_image = "assets/images/tours/gallery/" . $file_name;
+                        $conn->query("INSERT INTO tour_gallery (tour_id, image) VALUES ($tour_id, '$gal_image')");
+                    }
+                }
+            }
+        }
+        
         header("Location: tours.php?success=1");
     } else {
         $error = $conn->error;
@@ -268,7 +316,7 @@ include 'includes/header.php';
                             <input type="number" step="0.01" name="price_homestay" id="tourPriceHomestay" class="form-control" value="0.00">
                         </div>
                         <div class="col-md-12">
-                            <label class="form-label">Tour Image</label>
+                            <label class="form-label">Tour Main Image</label>
                             <div class="input-group">
                                 <input type="file" name="image_file" id="tourImageFile" class="form-control" accept="image/*">
                             </div>
@@ -276,6 +324,13 @@ include 'includes/header.php';
                                 <small class="text-muted">Or enter URL/Path:</small>
                                 <input type="text" name="image_path" id="tourImagePath" class="form-control form-control-sm" placeholder="assets/images/...">
                                 <input type="hidden" name="existing_image" id="tourExistingImage">
+                            </div>
+                        </div>
+                        <div class="col-md-12 border-top pt-3">
+                            <label class="form-label fw-bold">Tour Gallery Images (Select Multiple)</label>
+                            <input type="file" name="gallery_files[]" class="form-control" multiple accept="image/*">
+                            <div id="galleryManagement" class="mt-3 d-flex flex-wrap gap-2">
+                                <!-- Gallery images will be loaded here via JS -->
                             </div>
                         </div>
                     </div>
@@ -335,7 +390,40 @@ function editTour(data) {
     document.getElementById('tourExistingImage').value = data.image;
     document.getElementById('tourStatus').value = data.status;
     document.getElementById('tourModalTitle').innerText = 'Edit Tour';
+    
+    // Load Gallery
+    const galleryDiv = document.getElementById('galleryManagement');
+    galleryDiv.innerHTML = '<small class="text-muted">Loading gallery...</small>';
+    fetch('tours.php?fetch_gallery=' + data.id)
+        .then(res => res.json())
+        .then(imgs => {
+            galleryDiv.innerHTML = '';
+            imgs.forEach(img => {
+                const div = document.createElement('div');
+                div.className = 'position-relative';
+                div.style.width = '80px';
+                div.style.height = '80px';
+                div.innerHTML = `
+                    <img src="../${img.image}" class="rounded w-100 h-100" style="object-fit: cover;">
+                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 p-1" style="line-height:1; font-size:10px;" onclick="deleteGalleryImage(${img.id}, this.parentElement)">×</button>
+                `;
+                galleryDiv.appendChild(div);
+            });
+        });
+
     new bootstrap.Modal(document.getElementById('tourModal')).show();
+}
+
+function deleteGalleryImage(id, element) {
+    if(confirm('Remove this image from gallery?')) {
+        fetch('tours.php?delete_gallery_image=' + id)
+            .then(res => res.json())
+            .then(resp => {
+                if(resp.status === 'success') {
+                    element.remove();
+                }
+            });
+    }
 }
 </script>
 
