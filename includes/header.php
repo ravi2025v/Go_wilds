@@ -1,7 +1,7 @@
 <?php
 // includes/header.php
-session_name("GoWilds_Session");
 if (session_status() == PHP_SESSION_NONE) {
+    session_name("GoWilds_Session");
     session_start();
 }
 require_once 'admin/includes/db.php';
@@ -29,7 +29,7 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!--====== Title ======-->
     <title><?php echo isset($title) ? $title : 'MyEasyTrip - We Make Your Travel Easy'; ?></title>
-    
+
     <?php
     $wishlist_count = 0;
     if ($is_logged_in) {
@@ -94,6 +94,148 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
         .nice-select .list {
             z-index: 99999 !important;
         }
+
+        <style>
+        /* Modern Mobile Header Fixes */
+        @media (max-width: 1199px) {
+            .site-brading {
+                display: block !important;
+                padding: 10px 0;
+            }
+
+            .site-brading .brand-logo img {
+                height: 45px !important;
+                width: auto !important;
+                max-width: 180px !important;
+                display: inline-block !important;
+            }
+
+            .header-navigation .primary-menu {
+                display: flex !important;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 15px !important;
+            }
+
+            .nav-menu:not(.menu-on) {
+                display: none !important;
+            }
+
+            .header-top-bar {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .site-brading .brand-logo img {
+                height: 38px !important;
+            }
+        }
+
+        /* Custom Logo Preloader Styles */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preloader .loader {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 150px;
+            background: transparent;
+        }
+
+        .logo-loader {
+            width: 100px;
+            animation: logoPulse 2s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .logo-loader img {
+            width: 100%;
+            height: auto;
+        }
+
+        .loader-ring {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border: 2px solid rgba(245, 166, 35, 0.1);
+            border-top: 2px solid #f5a623;
+            border-radius: 50%;
+            animation: ringRotate 2s linear infinite;
+        }
+
+        /* Plane following the ring */
+        .loader-ring::after {
+            content: "\f0fb";
+            /* fa-plane */
+            font-family: "Font Awesome 5 Pro", "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%) rotate(90deg);
+            color: #f5a623;
+            font-size: 18px;
+            z-index: 10;
+        }
+
+        @keyframes logoPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        @keyframes ringRotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Top Header Height Fix */
+        .header-top-bar {
+            padding: 1px 0 !important;
+            min-height: auto !important;
+        }
+
+        .header-top-bar .single-info-item-two,
+        .header-top-bar .booking-item,
+        .header-top-bar ul {
+            margin-bottom: 0 !important;
+        }
+
+        .header-top-bar p {
+            margin-bottom: 0 !important;
+            line-height: 1.2 !important;
+        }
+
+        .header-top-bar .inner-info {
+            padding: 5px 0 !important;
+        }
     </style>
 </head>
 
@@ -101,10 +243,29 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
     <!--====== Start Preloader ======-->
     <div class="preloader">
         <div class="loader">
-            <div class="pre-shadow"></div>
-            <div class="pre-box"></div>
+            <div class="logo-loader">
+                <img src="assets/images/logo.png" alt="MyEasyTrip Logo">
+            </div>
+            <div class="loader-ring"></div>
         </div>
-    </div><!--====== End Preloader ======-->
+    </div>
+    <script>
+        // Professional Preloader Logic: Show for assets, but never get stuck
+        (function () {
+            var hidePreloader = function () {
+                var p = document.querySelector('.preloader');
+                if (p) {
+                    p.style.transition = 'opacity 0.5s ease';
+                    p.style.opacity = '0';
+                    setTimeout(function () { p.style.display = 'none'; }, 500);
+                }
+            };
+            // Safety timeout: Auto-hide after 3.5 seconds if window.load fails
+            setTimeout(hidePreloader, 3500);
+            window.addEventListener('load', hidePreloader);
+        })();
+    </script>
+    <!--====== End Preloader ======-->
 
     <!--====== Search From ======-->
     <div class="modal fade search-modal" id="search-modal">
@@ -199,15 +360,16 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
                 <div class="primary-menu black-bg px-0">
                     <!--====== Site Branding ======-->
                     <div class="site-brading ">
-                        <a href="index.php" class="brand-logo"><img src="assets/images/logo.png" alt="MyEasyTrip Logo"></a>
+                        <a href="index.php" class="brand-logo"><img src="assets/images/logo.png"
+                                alt="MyEasyTrip Logo"></a>
                     </div>
                     <!--====== Nav Menu ======-->
                     <div class="nav-menu">
                         <!--=== Nav Search ===-->
                         <div class="nav-search mb-30 d-block d-xl-none ">
-                            <form>
+                            <form action="search-results.php" method="GET">
                                 <div class="form_group">
-                                    <input type="email" class="form_control" placeholder="Search Here" name="email"
+                                    <input type="text" class="form_control" placeholder="Search Tours..." name="search"
                                         required>
                                     <button class="search-btn"><i class="fas fa-search"></i></button>
                                 </div>
@@ -251,7 +413,12 @@ if ($is_logged_in && !isset($_SESSION['user_phone'])) {
                                 <li class="menu-item has-children"><a href="https://www.myeasytrip.in/">Flight
                                         bookings</a></li>
                                 <li class="menu-item has-children"><a href="visa-service.php">Visa services</a></li>
-                                <li class="menu-item"><a href="wishlist.php">Wishlist <span class="badge bg-primary wishlist-badge" id="header-wishlist-count" style="font-size: 10px; vertical-align: top; border-radius: 50%; padding: 3px 6px; <?php echo $wishlist_count == 0 ? 'display:none;' : ''; ?>"><?php echo $wishlist_count; ?></span></a></li>
+                                <li class="menu-item"><a href="activity.php">Activities</a></li>
+                                <li class="menu-item"><a href="blog.php">Blog</a></li>
+                                <li class="menu-item"><a href="wishlist.php">Wishlist <span
+                                            class="badge bg-primary wishlist-badge" id="header-wishlist-count"
+                                            style="font-size: 10px; vertical-align: top; border-radius: 50%; padding: 3px 6px; <?php echo $wishlist_count == 0 ? 'display:none;' : ''; ?>"><?php echo $wishlist_count; ?></span></a>
+                                </li>
                                 <li class="menu-item"><a href="contact.php">Contact</a></li>
                             </ul>
 

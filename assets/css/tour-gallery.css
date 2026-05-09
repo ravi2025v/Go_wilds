@@ -12,17 +12,24 @@
     overflow: hidden;
     position: relative;
     background: #f0f0f0;
+    max-width: 100% !important; /* Critical: Prevent width overflow */
 }
 
 .thumb-gallery-slider {
     width: 150px;
     flex-shrink: 0;
+    max-width: 100% !important;
+}
+
+.main-gallery-slider .swiper-slide {
+    max-width: 100% !important;
 }
 
 .main-gallery-slider .swiper-slide img {
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
     object-fit: cover;
+    max-width: 100% !important;
 }
 
 .thumb-gallery-slider .swiper-slide {
@@ -76,5 +83,22 @@
     .thumb-gallery-slider .swiper-slide {
         width: 100px !important;
         height: 80px !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .main-gallery-slider {
+        height: 250px;
+    }
+    .thumb-gallery-slider {
+        height: 80px;
+    }
+    .thumb-gallery-slider .swiper-slide {
+        width: 80px !important;
+        height: 60px !important;
+    }
+    .tour-gallery-wrapper {
+        gap: 10px;
+        margin-bottom: 20px;
     }
 }

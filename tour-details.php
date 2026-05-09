@@ -83,26 +83,36 @@ if ($gal_res && $gal_res->num_rows > 0) {
         $gallery_items[] = $gal_row;
     }
 }
+
+// Fetch Matching Activities for this tour destination
+$city_match = $conn->real_escape_string($tour['destination']);
+// Get Country Name for the "View All" button link
+$activities_query = "SELECT * FROM activity_cards WHERE status = 'active' AND (country_name LIKE '%$city_match%' OR city_name LIKE '%$city_match%') LIMIT 6";
+$activities_res = $conn->query($activities_query);
+$optional_activities = [];
+$match_country = '';
+if ($activities_res && $activities_res->num_rows > 0) {
+    while($act = $activities_res->fetch_assoc()) {
+        $optional_activities[] = $act;
+        if(empty($match_country)) $match_country = $act['country_name'];
+    }
+}
+
+// Get the current activity cart from session for pre-selection
+$stored_cart = $_SESSION['activity_cart'] ?? [];
+$selected_ids = array_keys($stored_cart);
+
+// Professional Sync: Remember this tour ID in session for the 'Return' button
+$_SESSION['active_booking_tour_id'] = $tour_id;
 ?>
 <style>
-    /* Absolute override to ensure page content is visible */
-    .preloader { display: none !important; pointer-events: none !important; opacity: 0 !important; visibility: hidden !important; }
-    #preloader { display: none !important; }
+    .act-card:hover { border-color: #F7921E !important; background: #fafafa; }
+    @media (max-width: 575px) {
+        .act-card { padding: 10px !important; }
+        .act-img img { width: 60px !important; height: 60px !important; }
+        .act-info h6 { font-size: 0.85rem !important; }
+    }
 </style>
-<script>
-    // Immediate preloader kill
-    (function() {
-        var kill = function() {
-            var p = document.querySelector('.preloader') || document.getElementById('preloader');
-            if(p) p.style.setProperty('display', 'none', 'important');
-        };
-        kill();
-        window.addEventListener('load', kill);
-        setTimeout(kill, 500);
-        setTimeout(kill, 1000);
-        setTimeout(kill, 2000);
-    })();
-</script>
 
 <!--====== Start Place Details Section ======-->
 <section class="place-details-section">
@@ -282,6 +292,57 @@ if ($gal_res && $gal_res->num_rows > 0) {
                                 <?php endif; ?>
                             </div>
                         </div>
+
+                        <!--=== Optional Activities / Experiences Grid ===-->
+                        <?php if (!empty($optional_activities)): ?>
+                        <div class="must-do-activities mt-60 mb-60 wow fadeInUp">
+                            <div class="section-title mb-30">
+                                <h3>Enhance Your Trip</h3>
+                                <p>Hand-picked experiences to make your <?php echo htmlspecialchars($tour['destination']); ?> trip unforgettable.</p>
+                            </div>
+                            <div class="row g-4">
+                                <?php foreach ($optional_activities as $act): ?>
+                                <div class="col-md-6">
+                                    <div class="act-card d-flex align-items-center p-3 border h-100" style="transition: 0.3s; border-radius: 4px;">
+                                        <div class="act-img me-3">
+                                            <?php 
+                                                $a_img = !empty($act['image']) ? $act['image'] : 'assets/images/activity-placeholder.png'; 
+                                            ?>
+                                            <img src="<?php echo $a_img; ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;" onerror="this.onerror=null; this.src='assets/images/activity-placeholder.png'">
+                                        </div>
+                                        <div class="act-info flex-grow-1">
+                                            <h6 class="mb-1" style="font-size: 0.95rem; line-height: 1.2;"><?php echo htmlspecialchars($act['title']); ?></h6>
+                                            <div class="price fw-bold text-success" style="font-size: 0.9rem;">+ ₹<?php echo number_format($act['price']); ?></div>
+                                        </div>
+                                        <div class="act-action ms-2">
+                                            <div class="form-check">
+                                                <?php 
+                                                    $stored_cart = $_SESSION['activity_cart'] ?? [];
+                                                    $is_checked = isset($stored_cart[$act['id']]);
+                                                ?>
+                                                <input class="form-check-input activity-toggle" type="checkbox" 
+                                                       data-price="<?php echo $act['price']; ?>" 
+                                                       data-title="<?php echo htmlspecialchars($act['title']); ?>"
+                                                       data-id="<?php echo $act['id']; ?>"
+                                                       id="act_<?php echo $act['id']; ?>"
+                                                       <?php echo $is_checked ? 'checked' : ''; ?>
+                                                       style="cursor: pointer; width: 1.4em; height: 1.4em;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+
+                            <?php if(!empty($match_country)): ?>
+                            <div class="text-center mt-4 pt-2">
+                                <a href="activity.php?country=<?php echo urlencode($match_country); ?>&return_tour_id=<?php echo $tour_id; ?>" class="btn btn-outline-primary rounded-pill px-4" style="font-size: 0.85rem; font-weight: 600; border-width: 2px;">
+                                    View All Experiences in <?php echo htmlspecialchars($match_country); ?> <i class="far fa-long-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endif; ?>
                     </div>
 
                     <!--=== Map Box ===-->
@@ -616,6 +677,15 @@ if ($gal_res && $gal_res->num_rows > 0) {
                                         <label class="text-muted small">Service Fee (<span id="total_pax_label">1</span> pax)</label>
                                         <span class="price text-dark small">₹<span id="service_fee_amount">20.00</span></span>
                                     </div>
+                                    <div class="selected-activities-box mb-2 d-none" id="selected-activities-container">
+                                        <label class="text-muted small mb-1">Activities Added:</label>
+                                        <div id="activities-list-sidebar" class="small text-dark fw-bold"></div>
+                                        <!-- Hidden inputs to store global session data -->
+                                        <input type="hidden" id="global_activity_total_input" value="<?php echo array_sum(array_column($_SESSION['activity_cart'] ?? [], 'price')); ?>">
+                                        <input type="hidden" id="global_activity_count_input" value="<?php echo count($_SESSION['activity_cart'] ?? []); ?>">
+                                        <input type="hidden" name="selected_activity_ids" id="selected_activity_ids_input" value="<?php echo implode(',', array_keys($_SESSION['activity_cart'] ?? [])); ?>">
+                                    </div>
+
                                     <div class="total d-flex justify-content-between pt-2 border-top">
                                         <label class="fw-bold">Total Amount</label>
                                         <span class="price fw-bold text-success fs-5">₹<span
@@ -876,8 +946,25 @@ if ($gal_res && $gal_res->num_rows > 0) {
             document.getElementById('total_pax_label').innerText = totalWithInfants;
             document.getElementById('service_fee_amount').innerText = serviceFee.toLocaleString('en-IN', { minimumFractionDigits: 2 });
 
+            // Global Activity Sync (Total from Session + Live Toggles)
+            // We use the hidden input which we'll populate with the global session total
+            const globalActTotal = parseFloat(document.getElementById('global_activity_total_input').value) || 0;
+            const activityCount = parseInt(document.getElementById('global_activity_count_input').value) || 0;
+
+            const actContainer = document.getElementById('selected-activities-container');
+            const actListEl = document.getElementById('activities-list-sidebar');
+            const actInput = document.getElementById('selected_activity_ids_input');
+            
+            if (globalActTotal > 0) {
+                actContainer.classList.remove('d-none');
+                actListEl.innerText = activityCount + " items selected (+₹" + globalActTotal.toLocaleString('en-IN') + ")";
+                // Hidden input remains for backend
+            } else {
+                actContainer.classList.add('d-none');
+            }
+
             // Include fees matching backend: ₹50 base + ₹20 per person (inc infants)
-            const total = (perAdultPrice * totalPeople) + bookingFee + serviceFee;
+            const total = (perAdultPrice * totalPeople) + bookingFee + serviceFee + globalActTotal;
             
             const totalAmountEl = document.getElementById('total_amount');
             if (totalAmountEl) {
@@ -893,6 +980,25 @@ if ($gal_res && $gal_res->num_rows > 0) {
         ['adults_count', 'child_count', 'infants_count', 'hotel_type'].forEach(id => {
             $(document).on('change', '#' + id, updatePrice);
         });
+        
+        // Activity Toggles with Session Sync
+        $(document).on('change', '.activity-toggle', function() {
+            const id = $(this).data('id');
+            const title = $(this).data('title');
+            const price = $(this).data('price');
+            const action = $(this).is(':checked') ? 'add' : 'remove';
+
+            // Sync to server session
+            $.post('ajax_update_activity_cart.php', { action, id, title, price }, function(resp) {
+                if(resp.success) {
+                    // Update global inputs
+                    document.getElementById('global_activity_total_input').value = resp.cart_total;
+                    document.getElementById('global_activity_count_input').value = resp.cart_count;
+                    updatePrice();
+                }
+            });
+        });
+
         updatePrice();
     }, 500);
 </script>

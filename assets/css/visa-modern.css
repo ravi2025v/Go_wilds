@@ -1,0 +1,284 @@
+/* 
+   ==========================================================================
+   Visa Service - Premium Multi-Step UI Design
+   ==========================================================================
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+.visa-modern-container {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    padding: 80px 0;
+    background: #fcfcfc;
+}
+
+/* Sophisticated Stepper */
+.visa-stepper-wrapper {
+    max-width: 800px;
+    margin: 0 auto 60px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}
+
+.visa-stepper-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: #eef2f6;
+    z-index: 1;
+}
+
+.visa-step-item {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    width: 120px;
+    cursor: pointer;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border: 2px solid #eef2f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    font-weight: 700;
+    color: #94a3b8;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    /* box-shadow: 0 4px 10px rgba(0,0,0,0.02); */
+}
+
+.visa-step-item.active .step-number {
+    background: #63ab45;
+    border-color: #63ab45;
+    color: #fff;
+    /* box-shadow: 0 10px 20px rgba(99, 171, 69, 0.2); */
+    transform: scale(1.1);
+}
+
+.visa-step-item.completed .step-number {
+    background: #63ab45;
+    border-color: #63ab45;
+    color: #fff;
+}
+
+.step-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s;
+}
+
+.visa-step-item.active .step-label {
+    color: #1e293b;
+}
+
+/* Form Card */
+.visa-form-card {
+    background: #fff;
+    border-radius: 32px;
+    /* box-shadow: 0 30px 100px rgba(0, 0, 0, 0.04); */
+    border: 1px solid #f1f5f9;
+    padding: 60px;
+    max-width: 950px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.visa-form-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, #63ab45, #8bc34a);
+}
+
+.step-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+/* Custom Input Styling */
+.modern-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.modern-input-field {
+    width: 100%;
+    padding: 16px 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    font-size: 16px;
+    color: #1e293b;
+    transition: all 0.3s;
+}
+
+.modern-input-field:focus {
+    background: #fff;
+    border-color: #63ab45;
+    box-shadow: 0 0 0 4px rgba(99, 171, 69, 0.1);
+    outline: none;
+}
+
+/* Select Box Overrides (Scoped to prevent header issues) */
+.visa-modern-page .bk-item .nice-select {
+    width: 100% !important;
+    height: 58px !important;
+    line-height: 54px !important;
+    background: #f8fafc !important;
+    border-radius: 14px !important;
+    border: 1px solid #e2e8f0 !important;
+    padding-left: 20px !important;
+    font-weight: 500 !important;
+    color: #1e293b !important;
+}
+
+.visa-modern-page .bk-item .nice-select:after {
+    right: 20px !important;
+}
+
+/* Upload Areas */
+.modern-upload-zone {
+    border: 2px dashed #cbd5e1;
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 20px;
+}
+
+.modern-upload-zone:hover {
+    border-color: #63ab45;
+    background: rgba(99, 171, 69, 0.02);
+}
+
+.modern-upload-zone i {
+    font-size: 48px;
+    color: #63ab45;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* Buttons */
+.visa-btn-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 50px;
+    justify-content: center;
+}
+
+.visa-primary-btn {
+    background: #63ab45;
+    color: #fff;
+    border: none;
+    padding: 18px 45px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* box-shadow: 0 10px 25px rgba(99, 171, 69, 0.2); */
+}
+
+.visa-primary-btn:hover {
+    background: #4e8a35;
+    transform: translateY(-2px);
+    /* box-shadow: 0 15px 35px rgba(99, 171, 69, 0.3); */
+}
+
+.visa-secondary-btn {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 18px 45px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.visa-secondary-btn:hover {
+    background: #e2e8f0;
+}
+
+/* Review Summary List */
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.summary-label {
+    color: #64748b;
+    font-weight: 600;
+}
+
+.summary-value {
+    color: #1e293b;
+    font-weight: 700;
+}
+
+/* Animations */
+.step {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 767px) {
+    .visa-form-card {
+        padding: 30px 20px;
+        border-radius: 20px;
+    }
+
+    .visa-stepper-wrapper {
+        margin-bottom: 40px;
+    }
+
+    .step-label {
+        font-size: 11px;
+    }
+
+    .step-number {
+        width: 40px;
+        height: 40px;
+    }
+}

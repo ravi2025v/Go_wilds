@@ -1,109 +1,12 @@
 <?php
 // includes/footer.php
 ?>
-<!--====== Start Gallery Section ======-->
-<section class="gallery-section mbm-150">
-    <div class="container-fluid">
-        <div class="slider-active-5-item wow fadeInUp">
-            <!--=== Single Gallery Item ===-->
-            <div class="single-gallery-item">
-                <div class="gallery-img">
-                    <img src="assets/images/tour-3-550x590.jpg" alt="Gallery Image">
-                    <div class="hover-overlay">
-                        <a href="assets/images/tour-3-550x590.jpg" class="icon-btn img-popup"><i
-                                class="far fa-plus"></i></a>
-                    </div>
-                </div>
-            </div>
-            <!--=== Single Gallery Item ===-->
-            <div class="single-gallery-item">
-                <div class="gallery-img">
-                    <img src="assets/images/tour-5-550x590.jpg" alt="Gallery Image">
-                    <div class="hover-overlay">
-                        <a href="assets/images/tour-5-550x590.jpg" class="icon-btn img-popup"><i
-                                class="far fa-plus"></i></a>
-                    </div>
-                </div>
-            </div>
-            <!--=== Single Gallery Item ===-->
-            <div class="single-gallery-item">
-                <div class="gallery-img">
-                    <img src="assets/images/tour-12-550x590.jpg" alt="Gallery Image">
-                    <div class="hover-overlay">
-                        <a href="assets/images/tour-12-550x590.jpg" class="icon-btn img-popup"><i
-                                class="far fa-plus"></i></a>
-                    </div>
-                </div>
-            </div>
-            <!--=== Single Gallery Item ===-->
-            <div class="single-gallery-item">
-                <div class="gallery-img">
-                    <img src="assets/images/tour-8-550x590.jpg" alt="Gallery Image">
-                    <div class="hover-overlay">
-                        <a href="assets/images/tour-8-550x590.jpg" class="icon-btn img-popup"><i
-                                class="far fa-plus"></i></a>
-                    </div>
-                </div>
-            </div>
-            <!--=== Single Gallery Item ===-->
-            <div class="single-gallery-item">
-                <div class="gallery-img">
-                    <img src="assets/images/tour-2-550x590.jpg" alt="Gallery Image">
-                    <div class="hover-overlay">
-                        <a href="assets/images/tour-2-550x590.jpg" class="icon-btn img-popup"><i
-                                class="far fa-plus"></i></a>
-                    </div>
-                </div>
-            </div>
-            <!--=== Single Gallery Item ===-->
-            <div class="single-gallery-item">
-                <div class="gallery-img">
-                    <img src="assets/images/tour-4-550x590.jpg" alt="Gallery Image">
-                    <div class="hover-overlay">
-                        <a href="assets/images/tour-4-550x590.jpg" class="icon-btn img-popup"><i
-                                class="far fa-plus"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section><!--====== End Gallery Section ======-->
 <!--====== Start Footer ======-->
-<footer class="main-footer black-bg2 pt-230">
+<footer class="main-footer black-bg2 pt-20">
 
     <div class="container">
-        <!--=== Footer CTA ===-->
-        <div class="footer-cta pt-80 pb-40">
-            <div class="row">
-                <div class="col-lg-6">
-                    <!--=== Single CTA Item ===-->
-                    <div class="single-cta-item pr-lg-60 mb-40">
-                        <div class="icon">
-                            <img src="assets/images/icon-headphone.png" alt="Icon">
-                        </div>
-                        <div class="content">
-                            <h3 class="title text-white">Need Any Support For
-                                Tour & Travels ?</h3>
-                            <a href="#" class="icon-btn"><i class="far fa-long-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <!--=== Single CTA Item ===-->
-                    <div class="single-cta-item pl-lg-60 mb-40">
-                        <div class="icon">
-                            <img src="assets/images/icon-travel.png" alt="Icon">
-                        </div>
-                        <div class="content ">
-                            <h3 class="title text-white">Ready to Get Started With Vacations!</h3>
-                            <a href="#" class="icon-btn"><i class="far fa-long-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!--=== Footer Widget ===-->
-        <div class="footer-widget-area pt-75 pb-30">
+        <div class="footer-widget-area pt-20 pb-30">
             <div class="row">
                 <div class="col-lg-3 col-md-6">
                     <!--=== Footer Widget ===-->
@@ -155,6 +58,7 @@
                     <div class="footer-widget about-company-widget mb-40 pl-lg-20">
                         <h4 class="widget-title text-white">About</h4>
                         <div class="footer-content">
+                            <p class="mb-2"><a href="contact.php" style="color: #F7921E; font-weight: 600;">Need Any Support For Tour & Travels?</a></p>
                             <p>Drop a Line<br>
                                 +91-8233803333</p>
 

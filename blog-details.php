@@ -1,212 +1,25 @@
-<!DOCTYPE html>
-<html lang="zxx">
-    <head>
-        <!--====== Required meta tags ======-->
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="description" content="Adventure, Tours, Travel">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!--====== Title ======-->
-        <title>Gowilds - Tours and Travel HTML Template</title>
-        <!--====== Favicon Icon ======-->
-        <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/png">
-        <!--====== Google Fonts ======-->
-        <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-        <!--====== Flaticon css ======-->
-        <link rel="stylesheet" href="assets/fonts/flaticon/flaticon_gowilds.css">
-        <!--====== FontAwesome css ======-->
-        <link rel="stylesheet" href="assets/fonts/fontawesome/css/all.min.css">
-        <!--====== Bootstrap css ======-->
-        <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
-        <!--====== magnific-popup css ======-->
-        <link rel="stylesheet" href="assets/vendor/magnific-popup/dist/magnific-popup.css">
-        <!--====== Slick-popup css ======-->
-        <link rel="stylesheet" href="assets/vendor/slick/slick.css">
-        <!--====== Jquery UI css ======-->
-        <link rel="stylesheet" href="assets/vendor/jquery-ui/jquery-ui.min.css">
-        <!--====== Nice Select css ======-->
-        <link rel="stylesheet" href="assets/vendor/nice-select/css/nice-select.css">
-        <!--====== Animate css ======-->
-        <link rel="stylesheet" href="assets/vendor/animate.css">
-        <!--====== Default css ======-->
-        <link rel="stylesheet" href="assets/css/default.css">
-        <!--====== Style css ======-->
-        <link rel="stylesheet" href="assets/css/style.css">
-    </head>
-    <body>
-        <!--====== Start Preloader ======-->
-        <div class="preloader">
-            <div class="loader">
-                <div class="pre-shadow"></div>
-                <div class="pre-box"></div>
-            </div>
-        </div><!--====== End Preloader ======-->
-        <!--====== Search From ======-->
-		<div class="modal fade search-modal" id="search-modal">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <form>
-                        <div class="form_group">
-                        	<input type="search" class="form_control" placeholder="Search here" name="search">
-                        	<label><i class="fa fa-search"></i></label>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-		<!--====== Search From ======-->
-		
-		
-        <!--====== Start Hero Section ======-->
-        <header class="header-area header-three ">
-            <!--====== Header Top Bar ======-->
-            <div class="header-top-bar bg-green ">
-                <div class="container">
-                    <div class="row align-items-center">   
-                        <div class="col-xl-6 col-lg-12">
-                            <!--====== Information Wrapper ======-->
-                            <div class="information-wrapper">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="single-info-item-two justify-content-start">
-                                            <div class="inner-info text-Start">
-                                                <div class="icon">
-                                                   <i class="fas fa-phone-alt"></i>
-                                                </div>
-                                                <div class="info2">                                                   
-                                                    <p><a href="tel:+918233803333">+91-8233803333</a></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="single-info-item-two justify-content-start">
-                                            <div class="inner-info">
-                                                <div class="icon">
-                                                    <i class="far fa-envelope"></i>
-                                                </div>
-                                                <div class="info">                                                   
-                                                    <p><a href="mailto:support@myeasytrip.in">support@myeasytrip.in</a><p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>                                   
-                                </div>
-                            </div>
-                        </div>
-						<div class="col-xl-6 col-lg-12">
-							<div class="row align-items-center">
-                                <div class="col-lg-9 ">
-									<ul class="d-flex justify-content-end">
-										<li class="pe-3"><a href="index.php">Booking Now</a></li>
-										<li><a href="about.php">About Us</a></li>                                   
-									</ul>
-								</div>
-								<div class="col-lg-3">								
-									<div class="booking-item">
-										<div class="bk-item booking-user" id="currency">
-											<select class="wide">
-                                                <option value="01">USD</option>
-                                                <option value="02">INR</option>
-                                                <option value="03">EUR</option>
-                                            </select>
-                                       </div>
-                                   </div>
-								</div>
-							</div>
-						</div>	
-                    </div>
-                </div>
-            </div>
-            <!--====== Header Navigation ======-->
-            <div class="header-navigation navigation-white">
-                <div class="nav-overlay"></div>
-                <div class="container">
-                    <div class="primary-menu black-bg px-0">
-                        <!--====== Site Branding ======-->
-                        <div class="site-brading ">
-                            <a href="index.php" class="brand-logo"><img src="assets/images/logo.png" alt="MyEasyTrip Logo"></a>
-                        </div>
-                        <!--====== Nav Menu ======-->
-						<!--<div class="mobile-logo mb-30">
-                             <a href="index.php" class="brand-logo"><img src="assets/images/logo.png" alt="MyEasyTrip Logo"></a>
-                        </div>-->
+<?php
+$title = 'Blog Details - MyEasyTrip';
+include 'includes/header.php';
+?>
+
+
+
+
+
+
+
+
+
 						
-                        <div class="nav-menu">                           
-                            <!--=== Nav Search ===-->
-                            <div class="nav-search mb-30 d-block d-xl-none ">
-                                <form>
-                                    <div class="form_group">
-                                        <input type="email" class="form_control" placeholder="Search Here" name="email" required>
-                                        <button class="search-btn"><i class="fas fa-search"></i></button>
-                                    </div>
-                                </form>
-                            </div>
-                            <!--====== Main Menu ======-->
-                            <nav class="main-menu nav-right-item">
-                                <ul>
-                                    <li class="menu-item has-children"><a href="index.php">Home</a></li>
-									<li class="menu-item has-children"><a href="about.php">About Us</a></li>
-                                    <li class="menu-item has-children"><a href="#">Tours</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="tour.php">International Destinations</a></li>
-											<li><a href="tour.php">Domestic Destinations</a></li>
-											<li><a href="tour.php">Hot Destinations</a></li>
-											<li><a href="tour.php">Niche Experience Tours</a></li>
-											<li><a href="tour.php">Pilgrimage</a></li>
-											<li><a href="tour.php">Wild Safari</a></li>
-											<li><a href="tour.php">Trek</a></li>
-                                        </ul>
-                                    </li>
-									<li class="menu-item has-children"><a href="https://www.myeasytrip.in/">Flight bookings</a></li>
-									<li class="menu-item has-children"><a href="visa-service.php">Visa services</a></li>
-									<li class="menu-item has-children"><a href="blog.php">Blog</a></li>
-									<li class="menu-item has-children"><a href="contact.php">Contact</a></li>
-                                    <!--<li class="menu-item has-children"><a href="#">Destination</a>
-                                        <ul class="sub-menu">
-											<li><a href="tour-details.php">Tours Details</a></li>
-                                            <li><a href="destination.php">Destination</a></li>
-                                            <li><a href="destination-details.php">Destination Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item has-children"><a href="#">Blog</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="blog-list.php">Blog List</a></li>
-                                            <li><a href="blog-details.php">Blog Details</a></li>
-                                        </ul>
-                                    </li>
-									<li class="menu-item search-item">
-                                        <div class="search-btn" data-bs-toggle="modal" data-bs-target="#search-modal"><i class="far fa-search"></i></div>
-                                    </li>
-                                    <li class="menu-item has-children"><a href="#">Pages</a>
-                                       
-                                    </li>-->
-                                </ul>
-								
-                            </nav>
-							
-                            <!--====== Menu Button ======-->
-                            <div class="menu-button mt-40 d-xl-none">
-                                <a href="contact.php" class="main-btn secondary-btn">Book Now<i class="fas fa-paper-plane"></i></a>
-                            </div>
-                        </div>
-                        <!--====== Nav Right Item ======-->
-                        <div class="nav-right-item">                       
-                            <div class="navbar-toggler">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+
+
+
 		
 
 		
 		
-		<!--====== End Header ======-->
+
 		
         <!--====== Start Breadcrumb Section ======-->
         <section class="page-banner overlay pt-170 pb-170 bg_cover" style="background-image: url(assets/images/abt-bg.jpg);">
@@ -487,101 +300,11 @@
                 </div>
             </div>
         </section><!--====== End Blog Details Section ======-->
-        <!--====== Start Gallery Section ======-->
-        <section class="gallery-section mbm-150">
-            <div class="container-fluid">
-                <div class="slider-active-5-item wow fadeInUp">
-                    <!--=== Single Gallery Item ===-->
-                    <div class="single-gallery-item">
-                        <div class="gallery-img">
-                            <img src="assets/images/gallery/gl-1.jpg" alt="Gallery Image">
-                            <div class="hover-overlay">
-                                <a href="assets/images/gallery/gl-1.jpg" class="icon-btn img-popup"><i class="far fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--=== Single Gallery Item ===-->
-                    <div class="single-gallery-item">
-                        <div class="gallery-img">
-                            <img src="assets/images/gallery/gl-2.jpg" alt="Gallery Image">
-                            <div class="hover-overlay">
-                                <a href="assets/images/gallery/gl-2.jpg" class="icon-btn img-popup"><i class="far fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--=== Single Gallery Item ===-->
-                    <div class="single-gallery-item">
-                        <div class="gallery-img">
-                            <img src="assets/images/gallery/gl-3.jpg" alt="Gallery Image">
-                            <div class="hover-overlay">
-                                <a href="assets/images/gallery/gl-3.jpg" class="icon-btn img-popup"><i class="far fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--=== Single Gallery Item ===-->
-                    <div class="single-gallery-item">
-                        <div class="gallery-img">
-                            <img src="assets/images/gallery/gl-4.jpg" alt="Gallery Image">
-                            <div class="hover-overlay">
-                                <a href="assets/images/gallery/gl-4.jpg" class="icon-btn img-popup"><i class="far fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--=== Single Gallery Item ===-->
-                    <div class="single-gallery-item">
-                        <div class="gallery-img">
-                            <img src="assets/images/gallery/gl-5.jpg" alt="Gallery Image">
-                            <div class="hover-overlay">
-                                <a href="assets/images/gallery/gl-5.jpg" class="icon-btn img-popup"><i class="far fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!--=== Single Gallery Item ===-->
-                    <div class="single-gallery-item">
-                        <div class="gallery-img">
-                            <img src="assets/images/gallery/gl-3.jpg" alt="Gallery Image">
-                            <div class="hover-overlay">
-                                <a href="assets/images/gallery/gl-3.jpg" class="icon-btn img-popup"><i class="far fa-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section><!--====== End Gallery Section ======-->
+
         <!--====== Start Footer ======-->
-       <footer class="main-footer black-bg2 pt-230">
+       <footer class="main-footer black-bg2 pt-80">
 
             <div class="container">
-                <!--=== Footer CTA ===-->
-                <div class="footer-cta pt-80 pb-40">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <!--=== Single CTA Item ===-->
-                            <div class="single-cta-item pr-lg-60 mb-40">
-                                <div class="icon">
-                                    <img src="assets/images/icon-headphone.png" alt="Icon">
-                                </div>
-                                <div class="content">
-                                    <h3 class="title text-white">Need Any Support For
-                                        Tour & Travels ?</h3>
-                                    <a href="#" class="icon-btn"><i class="far fa-long-arrow-right"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <!--=== Single CTA Item ===-->
-                            <div class="single-cta-item pl-lg-60 mb-40">
-                                <div class="icon">
-                                    <img src="assets/images/icon-travel.png" alt="Icon">
-                                </div>
-                                <div class="content ">
-                                    <h3 class="title text-white">Ready to Get Started With Vacations!</h3>
-                                    <a href="#" class="icon-btn"><i class="far fa-long-arrow-right"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!--=== Footer Widget ===-->
                 <div class="footer-widget-area pt-75 pb-30">
                     <div class="row">
@@ -634,6 +357,7 @@
                             <div class="footer-widget about-company-widget mb-40 pl-lg-20">
                                 <h4 class="widget-title text-white">About</h4>
                                 <div class="footer-content">
+									<p class="mb-2"><a href="contact.php" style="color: #F7921E; font-weight: 600;">Need Any Support For Tour & Travels?</a></p>
 									<p>Drop a Line<br>
 									+91-8233803333</p>
 

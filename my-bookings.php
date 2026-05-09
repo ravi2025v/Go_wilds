@@ -1,14 +1,19 @@
 <?php
-// my-bookings.php
-$title = "My Bookings - Gowilds Travel";
-include 'includes/header.php';
-require_once 'admin/includes/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_name("GoWilds_Session");
+    session_start();
+}
 
-// Redirect if not logged in
+// Redirect if not logged in - MUST be before header.php or any output
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
+
+$title = "My Bookings - Gowilds Travel";
+include 'includes/header.php';
+require_once 'admin/includes/db.php';
+?>
 
 $user_id = $_SESSION['user_id'];
 $msg = '';
@@ -34,8 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_booking'])) {
         if ($booking_data['status'] === 'pending') {
             // Recalculate price: $hotel_price already includes base + upgrade
             $totalPeople = $adults + $children;
+
+            // Re-calculate activities total from existing booking to preserve it
+            $get_act = $conn->query("SELECT total_price, hotel_price, adults, children, infants FROM tour_bookings WHERE id = $booking_id");
+            $old_data = $get_act->fetch_assoc();
+            $old_total = $old_data['total_price'];
+            $old_base = ($old_data['hotel_price'] * ($old_data['adults'] + $old_data['children'])) + 50 + (20 * ($old_data['adults'] + $old_data['children'] + $old_data['infants']));
+            $activity_fee = max(0, $old_total - $old_base);
+
             // Include standard fees: ₹50 base + ₹20 per person (including infants)
-            $new_total_price = ($hotel_price * $totalPeople) + 50 + (20 * ($totalPeople + $infants));
+            $new_total_price = ($hotel_price * $totalPeople) + 50 + (20 * ($totalPeople + $infants)) + $activity_fee;
 
             $update_sql = "UPDATE tour_bookings SET 
                            tour_date = '$new_date', 
@@ -86,109 +99,129 @@ $bookings_res = $conn->query($query);
 <section class="booking-list-section py-4 bg-light">
     <div class="container">
         <?php if ($msg): ?>
-            <div class="alert alert-<?php echo $msg_type; ?> alert-dismissible fade show" role="alert">
-                <?php echo $msg; ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+                <div class="alert alert-<?php echo $msg_type; ?> alert-dismissible fade show" role="alert">
+                    <?php echo $msg; ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
         <?php endif; ?>
 
         <div class="row">
             <?php if ($bookings_res && $bookings_res->num_rows > 0): ?>
-                <?php while ($booking = $bookings_res->fetch_assoc()): ?>
-                    <div class="col-lg-12 mb-4">
-                        <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <div class="row g-0">
-                                <div class="col-md-3">
-                                    <img src="<?php echo htmlspecialchars($booking['tour_image']); ?>" class="img-fluid h-100"
-                                        style="object-fit: cover;" alt="Tour">
-                                </div>
-                                <div class="col-md-9">
-                                    <div class="card-body p-4">
-                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                            <div>
-                                                <h4 class="card-title text-primary mb-1">
-                                                    <?php echo htmlspecialchars($booking['tour_title']); ?>
-                                                </h4>
-                                                <p class="text-muted small mb-0"><i
-                                                        class="fas fa-calendar-check me-1 text-success"></i> <strong>Travel
-                                                        Date:
-                                                        <?php echo date('d M Y', strtotime($booking['tour_date'])); ?></strong>
-                                                </p>
-                                                <p class="text-muted small mb-0"><i class="fas fa-history me-1"></i> Booked On:
-                                                    <?php echo date('d M Y', strtotime($booking['created_at'])); ?>
-                                                </p>
-                                            </div>
-                                            <div class="text-end">
-                                                <span class="badge <?php
-                                                if ($booking['status'] == 'confirmed')
-                                                    echo 'bg-success';
-                                                elseif ($booking['status'] == 'pending')
-                                                    echo 'bg-warning text-dark';
-                                                else
-                                                    echo 'bg-danger';
-                                                ?> px-3 py-2" style="border-radius: 20px;">
-                                                    <?php echo strtoupper($booking['status']); ?>
-                                                </span>
-                                                <h4 class="mt-2 text-dark">
-                                                    ₹<?php echo number_format($booking['total_price'], 2); ?></h4>
-                                            </div>
+                    <?php while ($booking = $bookings_res->fetch_assoc()): ?>
+                            <div class="col-lg-12 mb-4">
+                                <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                    <div class="row g-0">
+                                        <div class="col-md-3">
+                                            <img src="<?php echo htmlspecialchars($booking['tour_image']); ?>" class="img-fluid h-100"
+                                                style="object-fit: cover;" alt="Tour">
                                         </div>
+                                        <div class="col-md-9">
+                                            <div class="card-body p-4">
+                                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                                    <div>
+                                                        <h4 class="card-title text-primary mb-1">
+                                                            <?php echo htmlspecialchars($booking['tour_title']); ?>
+                                                        </h4>
+                                                        <p class="text-muted small mb-0"><i
+                                                                class="fas fa-calendar-check me-1 text-success"></i> <strong>Travel
+                                                                Date:
+                                                                <?php echo date('d M Y', strtotime($booking['tour_date'])); ?></strong>
+                                                        </p>
+                                                        <p class="text-muted small mb-0"><i class="fas fa-history me-1"></i> Booked On:
+                                                            <?php echo date('d M Y', strtotime($booking['created_at'])); ?>
+                                                        </p>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <span class="badge <?php
+                                                        if ($booking['status'] == 'confirmed')
+                                                            echo 'bg-success';
+                                                        elseif ($booking['status'] == 'pending')
+                                                            echo 'bg-warning text-dark';
+                                                        else
+                                                            echo 'bg-danger';
+                                                        ?> px-3 py-2" style="border-radius: 20px;">
+                                                            <?php echo strtoupper($booking['status']); ?>
+                                                        </span>
+                                                        <h4 class="mt-2 text-dark">
+                                                            ₹<?php echo number_format($booking['total_price'], 2); ?></h4>
+                                                    </div>
+                                                </div>
 
-                                        <div class="row mb-3 bg-light p-3 rounded">
-                                            <div class="col-md-4">
-                                                <small class="text-muted d-block">Travellers</small>
-                                                <span><?php echo ($booking['adults'] + $booking['children'] + $booking['infants']); ?>
-                                                    Persons (<?php echo $booking['adults']; ?>A,
-                                                    <?php echo $booking['children']; ?>C,
-                                                    <?php echo $booking['infants']; ?>I)</span>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <small class="text-muted d-block">Hotel Package</small>
-                                                <span
-                                                    class="badge bg-info-subtle text-info border border-info-subtle"><?php echo htmlspecialchars($booking['hotel_type'] ?: 'Budget Package'); ?></span>
-                                                <span
-                                                    class="d-block small mt-1">₹<?php 
-                                                        $display_price = $booking['hotel_price'];
-                                                        // Fallback for older budget bookings where hotel_price was stored as 0
-                                                        if ($display_price <= 0 || ($booking['hotel_type'] == 'Budget' && $display_price < $booking['p_budget'])) {
-                                                            $display_price = $booking['p_budget'];
-                                                        }
-                                                        echo number_format($display_price, 2); 
-                                                    ?> per pax</span>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <small class="text-muted d-block">Booking Reference</small>
-                                                <span>#TB-<?php echo str_pad($booking['id'], 5, '0', STR_PAD_LEFT); ?></span>
-                                            </div>
-                                        </div>
+                                                <div class="row mb-3 bg-light p-3 rounded">
+                                                    <div class="col-md-4">
+                                                        <small class="text-muted d-block">Travellers</small>
+                                                        <span><?php echo ($booking['adults'] + $booking['children'] + $booking['infants']); ?>
+                                                            Persons (<?php echo $booking['adults']; ?>A,
+                                                            <?php echo $booking['children']; ?>C,
+                                                            <?php echo $booking['infants']; ?>I)</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <small class="text-muted d-block">Hotel Package</small>
+                                                        <span
+                                                            class="badge bg-info-subtle text-info border border-info-subtle"><?php echo htmlspecialchars($booking['hotel_type'] ?: 'Budget Package'); ?></span>
+                                                        <span
+                                                            class="d-block small mt-1">₹<?php
+                                                            $display_price = $booking['hotel_price'];
+                                                            // Fallback for older budget bookings where hotel_price was stored as 0
+                                                            if ($display_price <= 0 || ($booking['hotel_type'] == 'Budget' && $display_price < $booking['p_budget'])) {
+                                                                $display_price = $booking['p_budget'];
+                                                            }
+                                                            echo number_format($display_price, 2);
+                                                            ?> per pax</span>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <small class="text-muted d-block">Booking Reference</small>
+                                                        <span>#TB-<?php echo str_pad($booking['id'], 5, '0', STR_PAD_LEFT); ?></span>
+                                                    </div>
+                                                </div>
 
-                                        <div class="d-flex gap-2">
-                                            <?php if ($booking['status'] !== 'cancelled'): ?>
-                                                <button class="btn btn-primary btn-sm px-4 rounded-pill"
-                                                    onclick='openEditModal(<?php echo json_encode($booking); ?>)'>
-                                                    <i class="fas fa-edit me-1"></i>Modify Booking
-                                                </button>
-                                            <?php endif; ?>
-                                            <a href="tour-details.php?id=<?php echo $booking['tour_id']; ?>"
-                                                class="btn btn-outline-secondary btn-sm px-4 rounded-pill">
-                                                View Details
-                                            </a>
+                                                <?php if (!empty($booking['selected_activities'])): ?>
+                                                    <div class="mb-3 border-top pt-2">
+                                                        <small class="text-muted d-block mb-1"><i class="fas fa-stars me-1 text-warning"></i> Additional Activities Added:</small>
+                                                        <div class="d-flex flex-wrap gap-1">
+                                                            <?php
+                                                            $acts = explode(', ', $booking['selected_activities']);
+                                                            foreach ($acts as $a):
+                                                                ?>
+                                                                    <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.75rem;"><?php echo htmlspecialchars($a); ?></span>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
+
+                                                <div class="d-flex gap-2">
+                                                    <?php if ($booking['status'] !== 'cancelled'): ?>
+                                                            <button class="btn btn-primary btn-sm px-4 rounded-pill"
+                                                                onclick='openEditModal(<?php echo htmlspecialchars(json_encode($booking), ENT_QUOTES, "UTF-8"); ?>)'>
+                                                                <i class="fas fa-edit me-1"></i>Modify Booking
+                                                            </button>
+                                                    <?php endif; ?>
+                                                    <a href="tour-details.php?id=<?php echo $booking['tour_id']; ?>"
+                                                        class="btn btn-outline-secondary btn-sm px-4 rounded-pill">
+                                                        View Details
+                                                    </a>
+                                                    <?php if ($booking['status'] == 'pending'): ?>
+                                                            <a href="activity.php?booking_id=<?php echo $booking['id']; ?>"
+                                                                class="btn btn-outline-info btn-sm px-4 rounded-pill border-info text-info">
+                                                                <i class="fas fa-plus-circle me-1"></i>Add/Edit Activities
+                                                            </a>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                <?php endwhile; ?>
+                    <?php endwhile; ?>
             <?php else: ?>
-                <div class="col-12 text-center py-5">
-                    <div class="mb-4">
-                        <i class="fas fa-calendar-times fa-4x text-muted"></i>
+                    <div class="col-12 text-center py-5">
+                        <div class="mb-4">
+                            <i class="fas fa-calendar-times fa-4x text-muted"></i>
+                        </div>
+                        <h3>No Bookings Found</h3>
+                        <p class="text-muted">You haven't booked any tours yet. Start exploring our amazing destinations!</p>
+                        <a href="tour.php" class="btn btn-primary mt-3">Browse Tours</a>
                     </div>
-                    <h3>No Bookings Found</h3>
-                    <p class="text-muted">You haven't booked any tours yet. Start exploring our amazing destinations!</p>
-                    <a href="tour.php" class="btn btn-primary mt-3">Browse Tours</a>
-                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -357,13 +390,10 @@ $bookings_res = $conn->query($query);
                             <span class="text-muted small">Service Fee (<span id="est_pax_label">1</span> pax):</span>
                             <span class="text-dark small">₹<span id="est_service_fee">20.00</span></span>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="fw-bold text-primary">Estimated Total:</span>
-                            <h4 class="mb-0 text-primary fw-bold">₹<span id="estimated_total">0.00</span></h4>
-                        </div>
+                    <div id="estimated_total_box">
+                        <h4 class="text-center fw-bold text-success mb-2">Total: ₹<span id="estimated_total">0.00</span></h4>
                     </div>
-
-                    <div class="alert alert-warning py-2 mb-3 border-0 bg-warning bg-opacity-10 text-dark"
+ <div class="alert alert-warning py-2 mb-3 border-0 bg-warning bg-opacity-10 text-dark"
                         style="font-size: 0.75rem;">
                         <i class="fas fa-info-circle me-1"></i> Final price will be updated once you save.
                     </div>
@@ -434,12 +464,21 @@ $bookings_res = $conn->query($query);
         const serviceFee = 20 * totalWithInfants;
         const baseTourTotal = hotelPrice * totalPeople;
 
+        // Extract Activity Price from existing total for preview
+        const currentTotal = parseFloat(currentBooking.total_price) || 0;
+        const currentPeople = (parseInt(currentBooking.adults) || 0) + (parseInt(currentBooking.children) || 0);
+        const currentWithInfants = currentPeople + (parseInt(currentBooking.infants) || 0);
+        const currentHotelPrice = parseFloat(currentBooking.hotel_price) || 0;
+        
+        const currentBase = (currentHotelPrice * currentPeople) + 50 + (20 * currentWithInfants);
+        const activityPrice = Math.max(0, currentTotal - currentBase);
+
         // Update UI
         document.getElementById('base_est_total').innerText = baseTourTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 });
         document.getElementById('est_pax_label').innerText = totalWithInfants;
-        document.getElementById('est_service_fee').innerText = serviceFee.toLocaleString('en-IN', { minimumFractionDigits: 2 });
+        document.getElementById('est_service_fee').innerText = (serviceFee + activityPrice).toLocaleString('en-IN', { minimumFractionDigits: 2 });
 
-        const total = baseTourTotal + bookingFee + serviceFee;
+        const total = baseTourTotal + bookingFee + serviceFee + activityPrice;
 
         document.getElementById('estimated_total').innerText = total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }

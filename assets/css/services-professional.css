@@ -1,0 +1,213 @@
+/* Editorial Professional Services Section */
+
+.services-section-professional {
+    background: #ffffff;
+    position: relative;
+    padding: 120px 0 100px;
+}
+
+/* Section Header - Editorial Style (Left Aligned for modern feel) */
+.services-section-professional .section-title {
+    margin-bottom: 80px !important;
+    text-align: left !important;
+    max-width: 800px;
+}
+
+.services-section-professional .section-title .sub-title {
+    display: inline-block !important;
+    color: #63ab45 !important;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 3px !important;
+    margin-bottom: 15px !important;
+    position: relative !important;
+    padding-left: 60px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.services-section-professional .section-title .sub-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 45px;
+    height: 2px;
+    background: #63ab45;
+}
+
+.services-section-professional .section-title .main-title {
+    font-size: 58px !important;
+    font-weight: 800 !important;
+    color: #0c1a0a !important;
+    line-height: 1.1 !important;
+    margin: 0 !important;
+    letter-spacing: -1px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Service Card - Editorial Minimalist Design */
+.services-section-professional .single-features-item {
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    transition: all 0.5s ease !important;
+    border: none !important;
+    margin-bottom: 50px !important;
+    position: relative !important;
+}
+
+.services-section-professional .single-features-item .img-holder {
+    position: relative !important;
+    border-radius: 40px 40px 0 40px !important; /* Unique organic shape */
+    overflow: hidden !important;
+    height: 480px !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1) !important;
+}
+
+.services-section-professional .single-features-item .img-holder img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+.services-section-professional .single-features-item:hover .img-holder img {
+    transform: scale(1.1) !important;
+}
+
+/* Floating Info Panel - Minimalist & Elegant */
+.services-section-professional .single-features-item .content {
+    position: absolute !important;
+    bottom: -30px !important;
+    right: 0 !important;
+    background: #ffffff !important;
+    padding: 35px !important;
+    border-radius: 30px 0 30px 0 !important;
+    width: 85% !important;
+    box-shadow: 15px 15px 40px rgba(0, 0, 0, 0.08) !important;
+    z-index: 5 !important;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    border-left: 6px solid #63ab45 !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.services-section-professional .single-features-item:hover .content {
+    transform: translateX(-15px) !important;
+    box-shadow: 20px 20px 50px rgba(99, 171, 69, 0.15) !important;
+}
+
+.services-section-professional .single-features-item .content .text {
+    display: block !important;
+    margin-bottom: 10px !important;
+}
+
+.services-section-professional .single-features-item .content h4.title {
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    color: #0c1a0a !important;
+    margin-bottom: 15px !important;
+    line-height: 1.2 !important;
+    transition: color 0.3s ease !important;
+}
+
+.services-section-professional .single-features-item .content h4.title::before {
+    display: none !important;
+    content: none !important;
+}
+
+.services-section-professional .single-features-item .content p {
+    font-size: 15px !important;
+    color: #555555 !important;
+    line-height: 1.6 !important;
+    margin-bottom: 0 !important;
+    opacity: 0.8 !important;
+}
+
+/* Circular Arrow Link */
+.services-section-professional .single-features-item .icon-btn {
+    position: absolute !important;
+    bottom: 25px !important;
+    right: 25px !important;
+    width: 50px !important;
+    height: 50px !important;
+    background: #f8fbf7 !important;
+    color: #63ab45 !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    border: 1px solid rgba(99, 171, 69, 0.2) !important;
+    z-index: 6 !important;
+}
+
+.services-section-professional .single-features-item:hover .icon-btn {
+    background: #63ab45 !important;
+    color: #ffffff !important;
+    transform: rotate(-45deg) !important;
+    border-color: #63ab45 !important;
+}
+
+/* Slider Spacing Fix */
+.services-section-professional .slider-active-4-item {
+    margin-top: 20px !important;
+}
+
+.services-section-professional .slider-active-4-item .slick-list {
+    overflow: visible !important;
+    padding: 50px 0 !important;
+}
+
+.services-section-professional .slider-active-4-item .slick-slide {
+    padding: 0 25px !important;
+}
+
+/* Reset WOW.js for reliability */
+.services-section-professional .wow {
+    visibility: visible !important;
+    animation: none !important;
+    opacity: 1 !important;
+}
+
+/* Responsive Overrides */
+@media (max-width: 1199px) {
+    .services-section-professional .section-title .main-title {
+        font-size: 46px !important;
+    }
+    .services-section-professional .single-features-item .img-holder {
+        height: 400px !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .services-section-professional {
+        padding: 80px 0 60px !important;
+    }
+    .services-section-professional .section-title .main-title {
+        font-size: 34px !important;
+    }
+    .services-section-professional .section-title {
+        text-align: center !important;
+    }
+    .services-section-professional .section-title .sub-title {
+        padding-left: 0 !important;
+    }
+    .services-section-professional .section-title .sub-title::before {
+        display: none !important;
+    }
+    .services-section-professional .single-features-item .img-holder {
+        height: 320px !important;
+        border-radius: 30px !important;
+    }
+    .services-section-professional .single-features-item .content {
+        padding: 25px !important;
+        width: 90% !important;
+        bottom: -20px !important;
+    }
+}
